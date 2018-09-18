@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+
+package dynagatewaytypes;
+
+message Decimal {
+    int64 coefficient = 1;
+    int32 exponent = 2;
+}
+
+message Uri {
+    string schema = 1;
+    string user_name = 2;
+    string user_password = 3;
+    string host = 4;
+    int64 port = 5;
+    string path = 6;
+    string query = 7;
+    string fragment = 8;
+}
+
+message Timestamp {
+    int64 unix_seconds = 1;
+    string timezone = 2;
+    int32 offset = 3;
+}

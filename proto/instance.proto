@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+
+import "general_types.proto";
+
+package dynagatewaytypes;
+
+message CreateInstanceReq {
+    oneof action {
+        int64 action_id = 1;
+        string name = 2;
+    }
+    oneof topology {
+        int64 topology_id = 3;
+        TopologySequence sequence = 4;
+    }
+    repeated Value values = 5;
+}
+
+message ReadInstanceReq {
+    int64 id = 1;
+    bool return_action_id = 2;
+    bool return_topology_id = 3;
+}
+
+message UpdateInstanceReq {
+    int64 id = 1;
+    repeated Value values = 2;
+}
+
+message DeleteInstanceReq {
+    int64 id = 1;
+}
+
+
+message InstanceRes {
+    Status status = 1;
+    int64 id = 2;
+    repeated Value values = 3;
+    int64 action_id = 4;
+    int64 topology_id = 5;
+}
+
+
+service InstanceService {
+    rpc Create(CreateInstanceReq) returns(Status);
+    rpc Read(ReadInstanceReq) returns(InstanceRes);
+    rpc Update(UpdateInstanceReq) returns(Status);
+    rpc Delete(DeleteInstanceReq) returns(Status);
+}

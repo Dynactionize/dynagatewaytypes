@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+
+import "general_types.proto";
+
+package dynagatewaytypes;
+
+
+message NewActionReq {
+    string name = 1;
+}
+
+message GetActionReq {
+    oneof selector {
+        int64 id = 1;
+        string name = 3;
+    };
+    bool return_full_object = 4;
+}
+
+message RenameActionReq {
+    int64 id = 1;
+    string name = 3;
+}
+
+message DeleteActionReq {
+    int64 id = 1;
+    bool cascade = 2;
+}
+
+message ActionRes {
+    Status status = 1;
+    int64 id = 2;
+    string name = 4;
+}
+
+service ActionService {
+    rpc New(NewActionReq) returns(ActionRes);
+    rpc Get(GetActionReq) returns(ActionRes);
+    rpc Rename(RenameActionReq) returns(Status);
+    rpc Delete(DeleteActionReq) returns(Status);
+}

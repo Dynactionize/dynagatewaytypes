@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+
+import "general_types.proto";
+
+package dynagatewaytypes;
+
+message NewLabelsReq {
+    oneof action {
+        int64 action_id = 1;
+        string name = 2;
+    }
+    oneof topology {
+        int64 topology_id = 3;
+        TopologySequence sequence = 4;
+    }
+    repeated LabelPosition labels = 5;
+}
+
+message GetLabelsReq {
+    oneof action {
+        int64 action_id = 1;
+        string name = 2;
+    }
+    oneof topology {
+        int64 topology_id = 3;
+        TopologySequence sequence = 4;
+    }
+}
+
+message RenameLabelReq {
+    oneof action {
+        int64 action_id = 1;
+        string name = 2;
+    }
+    oneof topology {
+        int64 topology_id = 3;
+        TopologySequence sequence = 4;
+    }
+    LabelPosition label = 5;
+}
+
+message DeleteLabelReq {
+    oneof action {
+        int64 action_id = 1;
+        string name = 2;
+    }
+    oneof topology {
+        int64 topology_id = 3;
+        TopologySequence sequence = 4;
+    }
+    int32 position = 5;
+}
+
+message DeleteLabelsReq {
+    oneof action {
+        int64 action_id = 1;
+        string name = 2;
+    }
+    oneof topology {
+        int64 topology_id = 3;
+        TopologySequence sequence = 4;
+    }
+}
+
+message LabelsRes {
+    Status status = 1;
+    repeated LabelPosition labels = 2;
+}
+
+service LabelService {
+    rpc New(NewLabelsReq) returns(Status);
+    rpc Get(GetLabelsReq) returns(LabelsRes);
+    rpc Rename(RenameLabelReq) returns(Status);
+    rpc Delete(DeleteLabelReq) returns(Status);
+    rpc DeleteAll(DeleteLabelsReq) returns(Status);
+}

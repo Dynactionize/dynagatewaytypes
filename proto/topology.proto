@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+
+import "general_types.proto";
+
+package dynagatewaytypes;
+
+message NewTopologyReq {
+    TopologySequence sequence = 1;
+}
+
+message GetTopologyReq {
+    oneof selector {
+        int64 id = 1;
+        TopologySequence sequence = 2;
+    }
+    bool return_full_object = 3;
+}
+
+
+message TopologyRes {
+    Status status = 1;
+    int64 id = 2;
+    TopologySequence sequence = 3;
+}
+
+service TopologyService {
+    rpc New(NewTopologyReq) returns(TopologyRes);
+    rpc Get(GetTopologyReq) returns(TopologyRes);
+}

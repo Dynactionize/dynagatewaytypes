@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+
+import "enums.proto";
+import "datatypes.proto";
+
+package dynagatewaytypes;
+
+message Status {
+    bool success = 1;
+    int64 code = 2;
+    string message = 3;
+}
+
+message TopologySequence {
+    repeated ComponentType components = 1;
+}
+
+message LabelPosition {
+    string label = 1;
+    int32 position = 2;
+}
+
+message Value {
+    DataType data_type = 1;
+
+    oneof value {
+        int64 integer_value = 100;
+        string string_value = 101;
+        bool boolean_value = 102;
+        Decimal decimal_value = 103;
+        Uri uri_value = 104;
+        double float_value = 105;
+        uint64 unsigned_integer_value = 106;
+        bytes binary_value = 107;
+        Timestamp timestamp_value = 108;
+        string uuid_value = 109;
+    }
+}
+
+message ValueList {
+    repeated Value values = 1;
+}
+
+

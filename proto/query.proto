@@ -1,0 +1,272 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+
+import "enums.proto";
+import "general_types.proto";
+
+package dynagatewaytypes;
+
+enum WhereObject {
+    // - TopologyFilter
+    // - InstanceFilter
+    WO_ACTION_ID = 0;
+
+    // - ActionFilter
+    // - InstanceFilter
+    WO_ACTION_NAME = 1;
+
+    // - ActionFilter
+    // - InstanceFilter
+    WO_TOPOLOGY_ID = 2;
+
+    // - ActionFilter
+    // - InstanceFilter
+    WO_TOPOLOGY_SEQUENCE = 3;
+
+    // - ActionFilter
+    // - InstanceFilter
+    WO_TOPOLOGY_LENGTH = 4;
+
+    // - ActionFilter
+    // - TopologyFilter
+    WO_TOPOLOGY_COMPONENT = 5;
+
+
+    // - ActionFilter
+    // - TopologyFilter
+    // - InstanceFilter
+    WO_VALUE = 6;
+
+
+    // - ActionFilter
+    // - InstanceFilter
+    WO_INSTANCE_ID = 7;
+
+    reserved 8 to max;
+}
+
+enum WhereOperator {
+    EQUAL = 0;
+    NOT_EQUAL = 1;
+    IN = 2;
+    NOT_IN = 3;
+    LIKE = 4;
+    NOT_LIKE = 5;
+    GREATER_THAN = 6;
+    LESS_THAN = 7;
+    GREATER_OR_EQUAL_THAN = 8;
+    LESS_OR_EQUAL_THAN = 9;
+    BETWEEN = 10;
+
+    reserved 11 to max;
+}
+
+enum LogicalOperator {
+    AND = 0;
+    OR = 1;
+    AND_NOT = 2;
+    OR_NOT = 3;
+
+    reserved 4 to max;
+}
+
+enum InstanceGroupBy {
+    ACTION_TOPOLOGY = 0;
+    ACTION = 1;
+    TOPOLOGY = 2;
+
+    reserved 3 to max;
+}
+
+message QueryReq {
+    // implicit AND
+    repeated WhereClauseGroup clause_groups = 1;
+}
+
+message WhereClauseGroup {
+    LogicalOperator logical_operator = 1;
+    repeated WhereClause where_clauses = 2;
+}
+
+message WhereClause {
+    WhereObject object = 1;
+    WhereOperator operator = 2;
+    oneof value {
+        Value single = 3;
+        ValueList list = 4;
+    }
+
+    ComponentType component = 5;
+    int32 position = 10;
+    string label = 11;
+}
+
+message ComponentFilter {
+    ComponentType type = 1;
+    int32 position = 2;
+    string label = 3;
+}
+
+
+message ActionQueryRes {
+    Status status = 1;
+    string cursor = 2;
+    int64 count = 3;
+}
+
+message TopologyQueryRes {
+    Status status = 1;
+    string cursor = 2;
+    int64 count = 3;
+}
+
+message InstanceQueryRes {
+    Status status = 1;
+    string cursor = 2;
+    int64 count = 3;
+    int64 number_action_topologies = 4;
+    int64 number_actions = 5;
+    int64 number_topologies = 6;
+}
+
+
+message ActionFetchReq {
+    string cursor = 1;
+    repeated ActionSortField sorting = 2;
+    Window window = 3;
+}
+
+message TopologyFetchReq {
+    string cursor = 1;
+    repeated TopologySortField sorting = 2;
+    Window window = 3;
+}
+
+message InstanceFetchReq {
+    string cursor = 1;
+    repeated InstanceSortField sorting = 2;
+    Window window = 3;
+}
+
+message InstanceGroupFetchReq {
+    string cursor = 1;
+    repeated InstanceSortField sorting = 2;
+    InstanceGroupBy group_by = 3;
+    repeated GroupSortField group_sorting = 4;
+    int64 current_group = 5;
+    Window window = 6;
+    bool omit_labels = 7;
+}
+
+message InstanceGroupedFetchReq {
+    string cursor = 1;
+    repeated InstanceSortField sorting = 2;
+    InstanceGroupBy group_by = 3;
+    repeated GroupSortField group_sorting = 4;
+    repeated Window group_windows = 5;
+    bool omit_labels = 6;
+}
+
+message ActionSortField {
+    oneof field {
+        bool id = 1;
+        bool name = 2;
+    }
+    bool descending = 4;
+}
+
+message TopologySortField {
+    oneof field {
+        bool id = 1;
+        bool topology_length = 2;
+    }
+    bool descending = 4;
+}
+
+message InstanceSortField {
+    oneof field {
+        bool id = 1;
+        bool action_name = 2;
+        bool topology_length = 3;
+        int32 topology_position = 4;
+    }
+    bool descending = 5;
+}
+
+message GroupSortField {
+    oneof field {
+        bool action_id = 1;
+        bool aciton_name = 2;
+        bool topology_id = 3;
+        bool topology_length = 4;
+    }
+    bool descending = 5;
+}
+
+message Window {
+    int64 offset = 1;
+    int64 size = 2;
+}
+
+
+message ActionFetchRes {
+    Status status = 1;
+    repeated Action actions = 2;
+}
+
+message TopologyFetchRes {
+    Status status = 1;
+    repeated Topology topologies = 2;
+}
+
+message InstanceFetchRes {
+    Status status = 1;
+    repeated Instance instances = 3;
+}
+
+message InstanceGroupFetchRes {
+    Status status = 1;
+    InstanceGroup group = 2;
+}
+
+message InstanceGroupedFetchRes {
+    Status status = 1;
+    repeated InstanceGroup groups = 2;
+}
+
+
+message Action {
+    int64 id = 1;
+    string name = 2;
+}
+
+message Topology {
+    int64 id = 1;
+    TopologySequence sequence = 2;
+}
+
+message Instance {
+    int64 id = 1;
+    repeated Value values = 2;
+}
+
+message InstanceGroup {
+    int64 action_id = 1;
+    int64 topology_id = 2;
+    repeated string labels = 3;
+    repeated Instance instances = 4;
+}
+
+service QueryService {
+    rpc Action(QueryReq) returns (ActionQueryRes);
+    rpc Topology(QueryReq) returns (TopologyQueryRes);
+    rpc Instance(QueryReq) returns (InstanceQueryRes);
+
+    rpc FetchActions(ActionFetchReq) returns (ActionFetchRes);
+    rpc FetchTopologies(TopologyFetchReq) returns (TopologyFetchRes);
+    rpc FetchInstances(InstanceFetchReq) returns (InstanceFetchRes);
+    rpc FetchGroupInstances(InstanceGroupFetchReq) returns (InstanceGroupFetchRes);
+    rpc FetchGroupedInstances(InstanceGroupedFetchReq) returns (InstanceGroupedFetchRes);
+}

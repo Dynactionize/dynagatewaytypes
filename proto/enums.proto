@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+
+package dynagatewaytypes;
+
+enum ComponentType {
+    CT_NONE = 0;
+    WHO = 1;
+    WHAT = 2;
+    WHERE = 3;
+    WHEN = 4;
+
+    reserved 5 to max;
+}
+
+enum DataType {
+    DT_NONE = 0;
+    INTEGER = 1;
+    STRING = 2;
+    BOOLEAN = 3;
+    DECIMAL = 4;
+    TIMESTAMP = 5;
+    URI = 6;
+    VOID = 7;
+    FLOAT = 8;
+    UNSIGNED_INTEGER = 9;
+    BINARY = 10;
+    UUID = 11;
+    reserved 12 to max;
+}
