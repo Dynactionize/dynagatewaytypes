@@ -8,15 +8,17 @@ import "general_types.proto";
 package dynagatewaytypes;
 
 message NewTopologyReq {
-    TopologySequence sequence = 1;
+    AuthToken token = 1;
+    TopologySequence sequence = 2;
 }
 
 message GetTopologyReq {
+    AuthToken token = 1;
     oneof selector {
-        int64 id = 1;
-        TopologySequence sequence = 2;
+        int64 id = 2;
+        TopologySequence sequence = 3;
     }
-    bool return_full_object = 3;
+    bool return_full_object = 4;
 }
 
 

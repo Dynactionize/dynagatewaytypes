@@ -8,60 +8,65 @@ import "general_types.proto";
 package dynagatewaytypes;
 
 message NewLabelsReq {
+    AuthToken token = 1;
     oneof action {
-        int64 action_id = 1;
-        string name = 2;
+        int64 action_id = 2;
+        string name = 3;
     }
     oneof topology {
-        int64 topology_id = 3;
-        TopologySequence sequence = 4;
+        int64 topology_id = 4;
+        TopologySequence sequence = 5;
     }
-    repeated LabelPosition labels = 5;
+    repeated LabelPosition labels = 6;
 }
 
 message GetLabelsReq {
+    AuthToken token = 1;
     oneof action {
-        int64 action_id = 1;
-        string name = 2;
+        int64 action_id = 2;
+        string name = 3;
     }
     oneof topology {
-        int64 topology_id = 3;
-        TopologySequence sequence = 4;
+        int64 topology_id = 4;
+        TopologySequence sequence = 5;
     }
 }
 
 message RenameLabelReq {
+    AuthToken token = 1;
     oneof action {
-        int64 action_id = 1;
-        string name = 2;
+        int64 action_id = 2;
+        string name = 3;
     }
     oneof topology {
-        int64 topology_id = 3;
-        TopologySequence sequence = 4;
+        int64 topology_id = 4;
+        TopologySequence sequence = 5;
     }
-    LabelPosition label = 5;
+    LabelPosition label = 6;
 }
 
 message DeleteLabelReq {
+    AuthToken token = 1;
     oneof action {
-        int64 action_id = 1;
-        string name = 2;
+        int64 action_id = 2;
+        string name = 3;
     }
     oneof topology {
-        int64 topology_id = 3;
-        TopologySequence sequence = 4;
+        int64 topology_id = 4;
+        TopologySequence sequence = 5;
     }
-    int32 position = 5;
+    int32 position = 6;
 }
 
 message DeleteLabelsReq {
+    AuthToken token = 1;
     oneof action {
-        int64 action_id = 1;
-        string name = 2;
+        int64 action_id = 2;
+        string name = 3;
     }
     oneof topology {
-        int64 topology_id = 3;
-        TopologySequence sequence = 4;
+        int64 topology_id = 4;
+        TopologySequence sequence = 5;
     }
 }
 

@@ -82,7 +82,8 @@ enum InstanceGroupBy {
 
 message QueryReq {
     // implicit AND
-    repeated WhereClauseGroup clause_groups = 1;
+    AuthToken token = 1;
+    repeated WhereClauseGroup clause_groups = 2;
 }
 
 message WhereClauseGroup {
@@ -133,40 +134,45 @@ message InstanceQueryRes {
 
 
 message ActionFetchReq {
-    string cursor = 1;
-    repeated ActionSortField sorting = 2;
-    Window window = 3;
+    AuthToken token = 1;
+    string cursor = 2;
+    repeated ActionSortField sorting = 3;
+    Window window = 4;
 }
 
 message TopologyFetchReq {
-    string cursor = 1;
-    repeated TopologySortField sorting = 2;
-    Window window = 3;
+    AuthToken token = 1;
+    string cursor = 2;
+    repeated TopologySortField sorting = 3;
+    Window window = 4;
 }
 
 message InstanceFetchReq {
-    string cursor = 1;
-    repeated InstanceSortField sorting = 2;
-    Window window = 3;
+    AuthToken token = 1;
+    string cursor = 2;
+    repeated InstanceSortField sorting = 3;
+    Window window = 4;
 }
 
 message InstanceGroupFetchReq {
-    string cursor = 1;
-    repeated InstanceSortField sorting = 2;
-    InstanceGroupBy group_by = 3;
-    repeated GroupSortField group_sorting = 4;
-    int64 current_group = 5;
-    Window window = 6;
-    bool omit_labels = 7;
+    AuthToken token = 1;
+    string cursor = 2;
+    repeated InstanceSortField sorting = 3;
+    InstanceGroupBy group_by = 4;
+    repeated GroupSortField group_sorting = 5;
+    int64 current_group = 6;
+    Window window = 7;
+    bool omit_labels = 8;
 }
 
 message InstanceGroupedFetchReq {
-    string cursor = 1;
-    repeated InstanceSortField sorting = 2;
-    InstanceGroupBy group_by = 3;
-    repeated GroupSortField group_sorting = 4;
-    repeated Window group_windows = 5;
-    bool omit_labels = 6;
+    AuthToken token = 1;
+    string cursor = 2;
+    repeated InstanceSortField sorting = 3;
+    InstanceGroupBy group_by = 4;
+    repeated GroupSortField group_sorting = 5;
+    repeated Window group_windows = 6;
+    bool omit_labels = 7;
 }
 
 message ActionSortField {
