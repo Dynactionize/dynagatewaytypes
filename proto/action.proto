@@ -9,25 +9,29 @@ package dynagatewaytypes;
 
 
 message NewActionReq {
-    string name = 1;
+    AuthToken token = 1;
+    string name = 2;
 }
 
 message GetActionReq {
+    AuthToken token = 1;
     oneof selector {
-        int64 id = 1;
+        int64 id = 2;
         string name = 3;
     };
     bool return_full_object = 4;
 }
 
 message RenameActionReq {
-    int64 id = 1;
+    AuthToken token = 1;
+    int64 id = 2;
     string name = 3;
 }
 
 message DeleteActionReq {
-    int64 id = 1;
-    bool cascade = 2;
+    AuthToken token = 1;
+    int64 id = 2;
+    bool cascade = 3;
 }
 
 message ActionRes {

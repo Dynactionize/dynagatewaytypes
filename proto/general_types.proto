@@ -44,4 +44,6 @@ message ValueList {
     repeated Value values = 1;
 }
 
-
+message AuthToken {
+    string jwt = 1;
+}

@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+
+import "general_types.proto";
+
+package dynagatewaytypes;
+
+message UserAuth {
+    string user_name = 1;
+    string password = 2;
+}
+
+message BearerToken {
+    string token = 1;
+}
+
+message ServiceAuth {
+    string client_id = 1;
+    string secret = 2;
+}
+
+message GetTokenReq {
+    oneof creds {
+        UserAuth user = 1;
+        BearerToken bearer = 2;
+        ServiceAuth service = 3;
+    };
+}
+
+message GetTokenRes {
+    Status status = 1;
+    AuthToken token = 2;
+}
+
+message LoginURIReq {
+    string user_name = 1;
+}
+
+message LoginURIRes {
+    Status status = 1;
+    string uri = 2;
+}
+
+service AuthenticateService {
+    rpc LoginURI(LoginURIReq) returns(LoginURIRes);
+    rpc GetToken(GetTokenReq) returns(GetTokenRes);
+}
