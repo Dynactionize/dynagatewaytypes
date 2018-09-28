@@ -1,9 +1,10 @@
 syntax = "proto3";
 
-option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option go_package = "go.dynactionize.com/dynagatewaytypes";
 option java_package = "com.dynactionize.dynagatewaytypes";
+option java_generic_services = true;
 
-import "general_types.proto";
+import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
@@ -49,8 +50,8 @@ message InstanceRes {
 
 
 service InstanceService {
-    rpc Create(CreateInstanceReq) returns(Status);
-    rpc Read(ReadInstanceReq) returns(InstanceRes);
+    rpc New(CreateInstanceReq) returns(Status);
+    rpc Get(ReadInstanceReq) returns(InstanceRes);
     rpc Update(UpdateInstanceReq) returns(Status);
     rpc Delete(DeleteInstanceReq) returns(Status);
 }
