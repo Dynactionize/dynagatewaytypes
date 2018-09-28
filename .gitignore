@@ -1,9 +1,2 @@
-cpp
-csharp
-go
-java
-js
-php
-python
-ruby
-*~
+*.pb.go
+deps

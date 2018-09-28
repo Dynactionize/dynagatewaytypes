@@ -1,7 +1,8 @@
 syntax = "proto3";
 
-option go_package = "go.dynactionize.com/dynagatewaytypes/go/dynagatewaytypes";
+option go_package = "go.dynactionize.com/dynagatewaytypes";
 option java_package = "com.dynactionize.dynagatewaytypes";
+option java_generic_services = true;
 
 package dynagatewaytypes;
 

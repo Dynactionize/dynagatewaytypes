@@ -1,95 +1,147 @@
-PROJECT_NAME := dynagatewaytypes
-LIB_NAME := $(PROJECT_NAME)
+# This repository does NOT need to live in ${GOPATH}/src/go.dynactionize.com
+# It will generate code for a multitude of languages
 
-PROJECT_DIR := go.dynactionize.com/$(PROJECT_NAME)
-LIB_DIR := $(PROJECT_DIR)
-SOURCE_DIR := ${GOPATH}/src/$(PROJECT_DIR)
-BINARY := $(LIB_NAME).a
-CURRENT_DIR := $(shell pwd)
+# User overridable variables:
+#
+# GO_PREFIX			The path where to generate the Go code
+#					Default: ${GOPATH}/src
+#					Result: ${GO_PREFIX}/go.dynactionize.com/dynagatewaytypes
+#
+# JAVA_PREFIX		The path where to generate the Java code
+#					Default: ${HOME}/java
+#					Result: ${JAVA_PREFIX}/com/dynactionize/dynagatewaytypes
+#
+# CPP_PREFIX		The path where to generate the C++ code
+#					Default: ${HOME}/cpp
+#					Result ${CPP_PREFIX}/dynagatewaytypes
+#
+# CSHARP_PREFIX		The path where to generate the C# code
+#					Default: ${HOME}/csharp
+#					Result: ${CSHARP_PREFIX}/dynagatewaytypes
+#
+# PYTHON_PREFIX		The path where to generate the Python code
+#					Default: ${HOME}/python
+#					Result: ${PYTHON_PREFIX}/dynagatewaytypes
+#
+# NODE_PREFIX   	The path where to generate the Node.js code
+#					Default: ${HOME}/node
+#					Result: ${NODE_PREFIX}/dynagatewaytypes
 
-FLAGS := -v
 
-all: clean generate
+GO_PREFIX=${GOPATH}/src
+JAVA_PREFIX=${HOME}/java
+CPP_PREFIX=${HOME}/cpp
+CSHARP_PREFIX=${HOME}/csharp
+PYTHON_PREFIX=${HOME}/python
+NODE_PREFIX=${HOME}/node
 
-clean:
-	go clean -x $(LIB_DIR)
-	rm -f $(CURRENT_DIR)/$(BINARY)
+PYTHON_GEN_INIT=yes
 
-distclean:
-	go clean -x -r $(LIB_DIR)
-	rm -f $(CURRENT_DIR)/$(BINARY)
+PKG_NAME := dynagatewaytypes
+WD := $(shell pwd)
 
-generate: generate_go generate_java generate_cpp generate_python generate_csharp generate_js generate_php generate_ruby
+all: go java cpp csharp python node
 
-generate_go:
-	go get -u github.com/golang/protobuf/protoc-gen-go
-	-rm -rf $(SOURCE_DIR)/go
+clean: clean_go clean_java clean_cpp clean_csharp clean_python clean_node
 
-	protoc --proto_path=$(SOURCE_DIR)/proto \
-		   --go_out=plugins=grpc:${GOPATH}/src \
-		   $(SOURCE_DIR)/proto/*.proto
-		  
-generate_java:
-	-rm -rf $(SOURCE_DIR)/java
-	-mkdir -p $(SOURCE_DIR)/java
+distclean: clean
+	-rm -rf deps
 
-	protoc --proto_path=$(SOURCE_DIR)/proto \
-		   --java_out=$(SOURCE_DIR)/java \
-		   $(SOURCE_DIR)/proto/*.proto
 
-generate_cpp:
-	-rm -rf $(SOURCE_DIR)/cpp
-	-mkdir -p $(SOURCE_DIR)/cpp
+# Go generation
+go: ${GOPATH}/bin/protoc-gen-go
+	protoc --proto_path=$(WD)/proto \
+		   --go_out=plugins=grpc:${GO_PREFIX} \
+		   $(WD)/proto/dynagatewaytypes/*.proto
 
-	protoc --proto_path=$(SOURCE_DIR)/proto \
-		   --cpp_out=$(SOURCE_DIR)/cpp \
-		   $(SOURCE_DIR)/proto/*.proto
+clean_go:
+	-rm -f $(GO_PREFIX)/go.dynactionize.com/dynagatewaytypes/*.pb.go
 
-generate_csharp:
-	-rm -rf $(SOURCE_DIR)/csharp
-	-mkdir -p $(SOURCE_DIR)/csharp
+${GOPATH}/bin/protoc-gen-go:
+	go get -u github.com/golang/protobuf/protoc-gen-go	
 
-	protoc --proto_path=$(SOURCE_DIR)/proto \
-		   --csharp_out=$(SOURCE_DIR)/csharp \
-		   $(SOURCE_DIR)/proto/*.proto
+# Java generation
+java:
+	-mkdir -p $(JAVA_PREFIX)
 
-generate_python:
-	-rm -rf $(SOURCE_DIR)/python
-	-mkdir -p $(SOURCE_DIR)/python/dynagatewaytypes
+	protoc --proto_path=$(WD)/proto \
+		   --java_out=$(JAVA_PREFIX) \
+		   $(WD)/proto/dynagatewaytypes/*.proto
 
-	protoc --proto_path=$(SOURCE_DIR)/proto \
-		   --python_out=$(SOURCE_DIR)/python/dynagatewaytypes \
-		   $(SOURCE_DIR)/proto/*.proto
+clean_java:
+	-rm -rf $(JAVA_PREFIX)/com/dynactionize/dynagatewaytypes
 
-generate_js:
-	-rm -rf $(SOURCE_DIR)/js
-	-mkdir -p $(SOURCE_DIR)/js
 
-	protoc --proto_path=$(SOURCE_DIR)/proto \
-		   --js_out=$(SOURCE_DIR)/js \
-		   $(SOURCE_DIR)/proto/*.proto	
+# C++ generation
+cpp: deps/grpc/bins/opt/grpc_cpp_plugin
+	-mkdir -p $(CPP_PREFIX)
+	
+	protoc --proto_path=$(WD)/proto \
+		   --cpp_out=$(CPP_PREFIX) \
+		   --grpc_cpp_out=$(CPP_PREFIX) \
+		   --plugin=protoc-gen-grpc_cpp=$(WD)/deps/grpc/bins/opt/grpc_cpp_plugin \
+		   $(WD)/proto/dynagatewaytypes/*.proto
 
-generate_php:
-	-rm -rf $(SOURCE_DIR)/php
-	-mkdir -p $(SOURCE_DIR)/php
+clean_cpp:
+	-rm -rf $(CPP_PREFIX)/dynagatewaytypes
 
-	protoc --proto_path=$(SOURCE_DIR)/proto \
-		   --php_out=$(SOURCE_DIR)/php \
-		   $(SOURCE_DIR)/proto/*.proto	
+# C# generation
+csharp: deps/grpc/bins/opt/grpc_csharp_plugin
+	-mkdir -p $(CSHARP_PREFIX)/dynagatewaytypes
 
-generate_ruby:
-	-rm -rf $(SOURCE_DIR)/ruby
-	-mkdir -p $(SOURCE_DIR)/ruby
+	protoc --proto_path=$(WD)/proto \
+		   --csharp_out=$(CSHARP_PREFIX)/dynagatewaytypes \
+		   --grpc_csharp_out=$(CSHARP_PREFIX)/dynagatewaytypes \
+		   --plugin=protoc-gen-grpc_csharp=$(WD)/deps/grpc/bins/opt/grpc_csharp_plugin \
+		   $(WD)/proto/dynagatewaytypes/*.proto
 
-	protoc --proto_path=$(SOURCE_DIR)/proto \
-		   --ruby_out=$(SOURCE_DIR)/ruby \
-		   $(SOURCE_DIR)/proto/*.proto	
+clean_csharp:
+	-rm -rf $(CSHARP_PREFIX)/dynagatewaytypes
 
-build: generate
-	go build -o $(CURRENT_DIR)/$(BINARY) $(FLAGS) $(LIB_DIR)/
+# Python generation
+python: deps/grpc/bins/opt/grpc_python_plugin
+	-mkdir -p $(PYTHON_PREFIX)/dynagatewaytypes
 
-deps:
-	go get -u
+	protoc --proto_path=$(WD)/proto \
+		   --python_out=$(PYTHON_PREFIX) \
+		   --grpc_python_out=$(PYTHON_PREFIX) \
+		   --plugin=protoc-gen-grpc_python=$(WD)/deps/grpc/bins/opt/grpc_python_plugin \
+		   $(WD)/proto/dynagatewaytypes/*.proto
 
-.PHONY: clean distclean generate build deps
+ifeq ($(PYTHON_GEN_INIT),yes)
+	touch $(PYTHON_PREFIX)/dynagatewaytypes/__init__.py
+endif
+
+clean_python:
+	-rm -rf $(PYTHON_PREFIX)/dynagatewaytypes
+
+# Javascript generation
+node: deps/grpc/bins/opt/grpc_node_plugin
+	-mkdir -p $(NODE_PREFIX)/dynagatewaytypes
+
+	protoc --proto_path=$(WD)/proto \
+		   --js_out=import_style=commonjs,binary:$(NODE_PREFIX) \
+		   --grpc_node_out=$(NODE_PREFIX) \
+		   --plugin=protoc-gen-grpc_node=$(WD)/deps/grpc/bins/opt/grpc_node_plugin \
+		   $(WD)/proto/dynagatewaytypes/*.proto
+
+clean_node:
+	-rm -rf $(NODE_PREFIX)/dynagatewaytypes
+
+# gRPC Plugins
+deps/grpc/bins/opt/grpc_cpp_plugin: deps/grpc/Makefile
+	cd deps/grpc && make grpc_cpp_plugin
+
+deps/grpc/bins/opt/grpc_csharp_plugin: deps/grpc/Makefile
+	cd deps/grpc && make grpc_csharp_plugin
+
+deps/grpc/bins/opt/grpc_python_plugin: deps/grpc/Makefile
+	cd deps/grpc && make grpc_python_plugin
+
+deps/grpc/bins/opt/grpc_node_plugin: deps/grpc/Makefile
+	cd deps/grpc && make grpc_node_plugin
+
+deps/grpc/Makefile:
+	-mkdir -p deps
+	cd deps && git clone --recursive https://github.com/grpc/grpc
 
