@@ -8,7 +8,7 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
-message NewLabelsReq {
+message CreateLabelsReq {
     AuthToken token = 1;
     oneof action {
         int64 action_id = 2;
@@ -77,7 +77,7 @@ message LabelsRes {
 }
 
 service LabelService {
-    rpc New(NewLabelsReq) returns(Status);
+    rpc Create(CreateLabelsReq) returns(Status);
     rpc Get(GetLabelsReq) returns(LabelsRes);
     rpc Rename(RenameLabelReq) returns(Status);
     rpc Delete(DeleteLabelReq) returns(Status);

@@ -8,7 +8,7 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
-message NewInstanceReq {
+message CreateInstanceReq {
     AuthToken token = 1;
     oneof action {
         int64 action_id = 2;
@@ -33,7 +33,7 @@ message InstanceBatch {
     repeated ValueList values = 5;
 }
 
-message BatchNewInstancesReq {
+message BatchCreateInstancesReq {
     AuthToken token = 1;
     repeated InstanceBatch batches = 2;
 }
@@ -70,8 +70,8 @@ message InstanceRes {
 
 
 service InstanceService {
-    rpc New(NewInstanceReq) returns(Status);
-    rpc BatchNew(BatchNewInstancesReq) returns(Status);
+    rpc Create(CreateInstanceReq) returns(Status);
+    rpc BatchCreate(BatchCreateInstancesReq) returns(Status);
     rpc Get(GetInstanceReq) returns(InstanceRes);
     rpc Update(UpdateInstanceReq) returns(Status);
     rpc Delete(DeleteInstanceReq) returns(Status);

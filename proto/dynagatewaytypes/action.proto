@@ -9,7 +9,7 @@ import "dynagatewaytypes/general_types.proto";
 package dynagatewaytypes;
 
 
-message NewActionReq {
+message CreateActionReq {
     AuthToken token = 1;
     string name = 2;
 }
@@ -42,7 +42,7 @@ message ActionRes {
 }
 
 service ActionService {
-    rpc New(NewActionReq) returns(ActionRes);
+    rpc Create(CreateActionReq) returns(ActionRes);
     rpc Get(GetActionReq) returns(ActionRes);
     rpc Rename(RenameActionReq) returns(Status);
     rpc Delete(DeleteActionReq) returns(Status);

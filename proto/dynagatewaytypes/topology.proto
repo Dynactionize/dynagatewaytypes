@@ -8,7 +8,7 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
-message NewTopologyReq {
+message CreateTopologyReq {
     AuthToken token = 1;
     TopologySequence sequence = 2;
 }
@@ -30,6 +30,6 @@ message TopologyRes {
 }
 
 service TopologyService {
-    rpc New(NewTopologyReq) returns(TopologyRes);
+    rpc Create(CreateTopologyReq) returns(TopologyRes);
     rpc Get(GetTopologyReq) returns(TopologyRes);
 }
