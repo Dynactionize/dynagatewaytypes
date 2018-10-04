@@ -38,19 +38,16 @@ message BatchCreateInstancesReq {
     repeated InstanceBatch batches = 2;
 }
 
-message ReadInstanceReq {
+message GetInstanceReq {
     AuthToken token = 1;
     int64 id = 2;
     bool return_action_id = 3;
     bool return_topology_id = 4;
 }
 
-message GetInstanceReq {
+message UpdateInstanceReq {
     AuthToken token = 1;
     int64 id = 2;
-
-    // Maarten: Remove? I think this does not make sense, unless this is an exact match on all elements
-    // of an instance...
     ValueList values = 3;
 }
 
