@@ -14,7 +14,7 @@ enum WhereObject {
     // - InstanceFilter
     WO_ACTION_ID = 0;
 
-    // - ActionFilter
+    // - TopologyFilter
     // - InstanceFilter
     WO_ACTION_NAME = 1;
 
@@ -82,17 +82,26 @@ enum InstanceGroupBy {
 }
 
 message QueryReq {
-    // implicit AND
     AuthToken token = 1;
-    repeated WhereClauseGroup clause_groups = 2;
+    oneof root {
+        WhereClauseBranchNode branch = 2;
+        WhereClauseLeafNode leaf = 3;
+    }
 }
 
-message WhereClauseGroup {
+message WhereClauseBranchNode {
     LogicalOperator logical_operator = 1;
-    repeated WhereClause where_clauses = 2;
+    repeated WhereClauseChildNode children = 2;
 }
 
-message WhereClause {
+message WhereClauseChildNode{
+    oneof child {
+        WhereClauseBranchNode branch_nodes = 2;
+        WhereClauseLeafNode leaf_nodes = 3;
+    }
+}
+
+message WhereClauseLeafNode {
     WhereObject object = 1;
     WhereOperator operator = 2;
     oneof value {
@@ -104,6 +113,31 @@ message WhereClause {
     int32 position = 10;
     string label = 11;
 }
+
+
+// message QueryReq {
+//     // implicit AND
+//     AuthToken token = 1;
+//     repeated WhereClauseGroup clause_groups = 2;
+// }
+
+// message WhereClauseGroup {
+//     LogicalOperator logical_operator = 1;
+//     repeated WhereClause where_clauses = 2;
+// }
+
+// message WhereClause {
+//     WhereObject object = 1;
+//     WhereOperator operator = 2;
+//     oneof value {
+//         Value single = 3;
+//         ValueList list = 4;
+//     }
+
+//     ComponentType component = 5;
+//     int32 position = 10;
+//     string label = 11;
+// }
 
 message ComponentFilter {
     ComponentType type = 1;
