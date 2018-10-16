@@ -96,8 +96,8 @@ message WhereClauseBranchNode {
 
 message WhereClauseChildNode{
     oneof child {
-        WhereClauseBranchNode branch_node = 2;
-        WhereClauseLeafNode leaf_node = 3;
+        WhereClauseBranchNode branch = 2;
+        WhereClauseLeafNode leaf = 3;
     }
 }
 
