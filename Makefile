@@ -110,6 +110,8 @@ python: deps/grpc/bins/opt/grpc_python_plugin
 
 ifeq ($(PYTHON_GEN_INIT),yes)
 	touch $(PYTHON_PREFIX)/dynagatewaytypes/__init__.py
+	echo 'import sys' > $(PYTHON_PREFIX)/dynagatewaytypes/__init__.py
+	echo 'sys.path.append(os.path.dirname(__file__))' > $(PYTHON_PREFIX)/dynagatewaytypes/__init__.py
 endif
 
 clean_python:
