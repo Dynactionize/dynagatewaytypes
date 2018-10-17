@@ -1,2 +1,9 @@
 *.pb.go
 deps
+cpp/
+csharp/
+java/
+js/
+php/
+python/
+ruby/
