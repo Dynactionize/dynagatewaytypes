@@ -15,6 +15,10 @@ message Status {
     string message = 3;
 }
 
+message ShowReq {
+    AuthToken token = 1;
+}
+
 message TopologySequence {
     repeated ComponentType components = 1;
 }
@@ -47,4 +51,19 @@ message ValueList {
 
 message AuthToken {
     string jwt = 1;
+}
+
+message Action {
+    int64 id = 1;
+    string name = 2;
+}
+
+message Topology {
+    int64 id = 1;
+    TopologySequence sequence = 2;
+}
+
+message Instance {
+    int64 id = 1;
+    repeated Value values = 2;
 }
