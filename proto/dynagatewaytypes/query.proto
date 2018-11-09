@@ -239,7 +239,7 @@ message InstanceSortField {
 message GroupSortField {
     oneof field {
         bool action_id = 1;
-        bool aciton_name = 2;
+        bool action_name = 2;
         bool topology_id = 3;
         bool topology_length = 4;
     }
