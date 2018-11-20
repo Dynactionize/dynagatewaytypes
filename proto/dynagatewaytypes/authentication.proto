@@ -22,6 +22,12 @@ message ServiceAuth {
     string secret = 2;
 }
 
+message Session {
+    bool valid = 1;
+    string user_name = 2;
+    int32 expires_in = 3;
+}
+
 message GetTokenReq {
     oneof creds {
         UserAuth user = 1;
@@ -44,7 +50,17 @@ message LoginURIRes {
     string uri = 2;
 }
 
+message GetSessionInfoReq {
+    AuthToken token = 1;
+}
+
+message GetSessionInfoRes{
+    Status status = 1;
+    Session session = 2;
+}
+
 service AuthenticateService {
     rpc LoginURI(LoginURIReq) returns(LoginURIRes);
     rpc GetToken(GetTokenReq) returns(GetTokenRes);
+    rpc SessionInfo(GetSessionInfoReq) returns(GetSessionInfoRes);
 }
