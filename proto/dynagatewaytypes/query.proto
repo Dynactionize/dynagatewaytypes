@@ -81,6 +81,36 @@ enum InstanceGroupBy {
     reserved 3 to max;
 }
 
+enum SortObject {
+    // - ActionSortField
+    // - GroupSortField
+    SO_ACTION_ID = 0;
+
+    // - ActionSortField
+    // - InstanceSortField
+    // - GroupSortField
+    SO_ACTION_NAME = 1;
+
+    // - TopologySortField
+    // - GroupSortField
+    SO_TOPOLOGY_ID = 2;
+
+    // - TopologySortField
+    // - InstanceSortField
+    // - GroupSortField
+    SO_TOPOLOGY_LENGTH = 3;
+
+    // - InstanceSortField
+    SO_INSTANCE_ID = 4;
+
+    reserved 5 to max;
+}
+
+message CountReq {
+    AuthToken token = 1;
+    string cursor = 2;
+}
+
 message QueryReq {
     AuthToken token = 1;
     oneof root {
@@ -145,6 +175,10 @@ message ComponentFilter {
     string label = 3;
 }
 
+message CountRes {
+    Status status = 1;
+    int64 count = 2;
+}
 
 message ActionQueryRes {
     Status status = 1;
@@ -211,39 +245,26 @@ message InstanceGroupedFetchReq {
 }
 
 message ActionSortField {
-    oneof field {
-        bool id = 1;
-        bool name = 2;
-    }
-    bool descending = 4;
+    SortObject field = 1;
+    bool descending = 2;
 }
 
 message TopologySortField {
-    oneof field {
-        bool id = 1;
-        bool topology_length = 2;
-    }
-    bool descending = 4;
+    SortObject field = 1;
+    bool descending = 2;
 }
 
 message InstanceSortField {
     oneof field {
-        bool id = 1;
-        bool action_name = 2;
-        bool topology_length = 3;
-        int32 topology_position = 4;
+        SortObject object = 1;
+        int32 topology_position = 2;
     }
     bool descending = 5;
 }
 
 message GroupSortField {
-    oneof field {
-        bool action_id = 1;
-        bool action_name = 2;
-        bool topology_id = 3;
-        bool topology_length = 4;
-    }
-    bool descending = 5;
+    SortObject field = 1;
+    bool descending = 2;
 }
 
 message Window {
@@ -288,6 +309,10 @@ service QueryService {
     rpc Action(QueryReq) returns (ActionQueryRes);
     rpc Topology(QueryReq) returns (TopologyQueryRes);
     rpc Instance(QueryReq) returns (InstanceQueryRes);
+    
+    rpc CountActions(CountReq) returns (CountRes);
+    rpc CountTopologies(CountReq) returns (CountRes);
+    rpc CountInstances(CountReq) returns (CountRes);
 
     rpc FetchActions(ActionFetchReq) returns (ActionFetchRes);
     rpc FetchTopologies(TopologyFetchReq) returns (TopologyFetchRes);
