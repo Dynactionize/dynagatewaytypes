@@ -1,0 +1,36 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+variables:
+  GOBIN:  '$(GOPATH)/bin'
+  GOROOT: '/usr/local/go1.11'
+  GOPATH: '$(system.defaultWorkingDirectory)/gopath'
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: Dynizer/build-templates
+
+steps:
+- template: golang-env.yaml@templates
+  parameters:
+    golang_goBin: '$(GOBIN)'
+    golang_goRoot: '$(GOROOT)'
+    golang_goPath: '$(GOPATH)'
+
+- template: protoc.yaml@templates
+
+- template: git-user.yaml@templates
+
+- script: |
+    git clone https://$(PAT):PAT@dev.azure.com/dynactionize/Dynizer/_git/go-dynagatewaytypes $GOPATH/src/go.dynactionize.com/dynagatewaytypes
+    make go
+    cd $GOPATH/src/go.dynactionize.com/dynagatewaytypes
+    git add --all
+    git commit -m "$(Build.BuildNumber)"
+    git push
+  displayName: 'protobuf to go and push'
