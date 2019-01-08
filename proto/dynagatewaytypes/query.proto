@@ -244,6 +244,15 @@ message InstanceGroupedFetchReq {
     bool omit_labels = 7;
 }
 
+message WideColumnTableFetchReq {
+    AuthToken token = 1;
+    string cursor = 2;
+    GroupSortField sorting = 3;
+    Window window = 4;
+    bool include_action_id = 5;
+    bool include_topology_id = 6;
+}
+
 message ActionSortField {
     SortObject field = 1;
     bool descending = 2;
@@ -272,6 +281,12 @@ message Window {
     int64 size = 2;
 }
 
+message WideColumnRow {
+    int64 instance_id = 1;
+    repeated ValueList cells = 2; 
+    int64 action_id = 3;
+    int64 topology_id = 4;
+}
 
 message ActionFetchRes {
     Status status = 1;
@@ -298,6 +313,12 @@ message InstanceGroupedFetchRes {
     repeated InstanceGroup groups = 2;
 }
 
+message WideColumnTableFetchRes {
+    Status status = 1;
+    repeated string column_names = 2;
+    repeated WideColumnRow rows = 3;
+}
+
 message InstanceGroup {
     int64 action_id = 1;
     int64 topology_id = 2;
@@ -319,4 +340,5 @@ service QueryService {
     rpc FetchInstances(InstanceFetchReq) returns (InstanceFetchRes);
     rpc FetchGroupInstances(InstanceGroupFetchReq) returns (InstanceGroupFetchRes);
     rpc FetchGroupedInstances(InstanceGroupedFetchReq) returns (InstanceGroupedFetchRes);
+    rpc FetchWideColumnTable(WideColumnTableFetchReq) returns (WideColumnTableFetchRes);
 }
