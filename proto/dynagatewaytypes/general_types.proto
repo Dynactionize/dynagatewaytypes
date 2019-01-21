@@ -54,16 +54,16 @@ message AuthToken {
 }
 
 message Action {
-    int64 id = 1;
+    string id = 1;
     string name = 2;
 }
 
 message Topology {
-    int64 id = 1;
+    string id = 1;
     TopologySequence sequence = 2;
 }
 
 message Instance {
-    int64 id = 1;
+    string id = 1; 
     repeated Value values = 2;
 }

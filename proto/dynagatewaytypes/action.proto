@@ -17,7 +17,7 @@ message CreateActionReq {
 message GetActionReq {
     AuthToken token = 1;
     oneof selector {
-        int64 id = 2;
+        string id = 2;
         string name = 3;
     };
     bool return_full_object = 4;
@@ -25,19 +25,19 @@ message GetActionReq {
 
 message RenameActionReq {
     AuthToken token = 1;
-    int64 id = 2;
+    string id = 2;
     string name = 3;
 }
 
 message DeleteActionReq {
     AuthToken token = 1;
-    int64 id = 2;
+    string id = 2;
     bool cascade = 3;
 }
 
 message ActionRes {
     Status status = 1;
-    int64 id = 2;
+    string id = 2;
     string name = 4;
 }
 

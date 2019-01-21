@@ -144,31 +144,6 @@ message WhereClauseLeafNode {
     string label = 11;
 }
 
-
-// message QueryReq {
-//     // implicit AND
-//     AuthToken token = 1;
-//     repeated WhereClauseGroup clause_groups = 2;
-// }
-
-// message WhereClauseGroup {
-//     LogicalOperator logical_operator = 1;
-//     repeated WhereClause where_clauses = 2;
-// }
-
-// message WhereClause {
-//     WhereObject object = 1;
-//     WhereOperator operator = 2;
-//     oneof value {
-//         Value single = 3;
-//         ValueList list = 4;
-//     }
-
-//     ComponentType component = 5;
-//     int32 position = 10;
-//     string label = 11;
-// }
-
 message ComponentFilter {
     ComponentType type = 1;
     int32 position = 2;
@@ -282,10 +257,10 @@ message Window {
 }
 
 message WideColumnRow {
-    int64 instance_id = 1;
+    string instance_id = 1;
     repeated ValueList cells = 2; 
-    int64 action_id = 3;
-    int64 topology_id = 4;
+    string action_id = 3;
+    string topology_id = 4;
 }
 
 message ActionFetchRes {
@@ -320,8 +295,8 @@ message WideColumnTableFetchRes {
 }
 
 message InstanceGroup {
-    int64 action_id = 1;
-    int64 topology_id = 2;
+    string action_id = 1;
+    string topology_id = 2;
     repeated string labels = 3;
     repeated Instance instances = 4;
 }

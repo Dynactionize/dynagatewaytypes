@@ -16,7 +16,7 @@ message CreateTopologyReq {
 message GetTopologyReq {
     AuthToken token = 1;
     oneof selector {
-        int64 id = 2;
+        string id = 2;
         TopologySequence sequence = 3;
     }
     bool return_full_object = 4;
@@ -25,7 +25,7 @@ message GetTopologyReq {
 
 message TopologyRes {
     Status status = 1;
-    int64 id = 2;
+    string id = 2;
     TopologySequence sequence = 3;
 }
 

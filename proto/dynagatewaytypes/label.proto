@@ -11,11 +11,11 @@ package dynagatewaytypes;
 message CreateLabelsReq {
     AuthToken token = 1;
     oneof action {
-        int64 action_id = 2;
+        string action_id = 2;
         string name = 3;
     }
     oneof topology {
-        int64 topology_id = 4;
+        string topology_id = 4;
         TopologySequence sequence = 5;
     }
     repeated LabelPosition labels = 6;
@@ -24,11 +24,11 @@ message CreateLabelsReq {
 message GetLabelsReq {
     AuthToken token = 1;
     oneof action {
-        int64 action_id = 2;
+        string action_id = 2;
         string name = 3;
     }
     oneof topology {
-        int64 topology_id = 4;
+        string topology_id = 4;
         TopologySequence sequence = 5;
     }
 }
@@ -36,11 +36,11 @@ message GetLabelsReq {
 message RenameLabelReq {
     AuthToken token = 1;
     oneof action {
-        int64 action_id = 2;
+        string action_id = 2;
         string name = 3;
     }
     oneof topology {
-        int64 topology_id = 4;
+        string topology_id = 4;
         TopologySequence sequence = 5;
     }
     LabelPosition label = 6;
@@ -49,11 +49,11 @@ message RenameLabelReq {
 message DeleteLabelReq {
     AuthToken token = 1;
     oneof action {
-        int64 action_id = 2;
+        string action_id = 2;
         string name = 3;
     }
     oneof topology {
-        int64 topology_id = 4;
+        string topology_id = 4;
         TopologySequence sequence = 5;
     }
     int32 position = 6;
@@ -62,11 +62,11 @@ message DeleteLabelReq {
 message DeleteLabelsReq {
     AuthToken token = 1;
     oneof action {
-        int64 action_id = 2;
+        string action_id = 2;
         string name = 3;
     }
     oneof topology {
-        int64 topology_id = 4;
+        string topology_id = 4;
         TopologySequence sequence = 5;
     }
 }

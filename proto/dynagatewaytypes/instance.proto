@@ -11,11 +11,11 @@ package dynagatewaytypes;
 message CreateInstanceReq {
     AuthToken token = 1;
     oneof action {
-        int64 action_id = 2;
+        string action_id = 2;
         string name = 3;
     }
     oneof topology {
-        int64 topology_id = 4;
+        string topology_id = 4;
         TopologySequence sequence = 5;
     }
     ValueList values = 6;
@@ -23,11 +23,11 @@ message CreateInstanceReq {
 
 message InstanceBatch {
     oneof action {
-        int64 action_id = 1;
+        string action_id = 1;
         string name = 2;
     }
     oneof topology {
-        int64 topology_id = 3;
+        string topology_id = 3;
         TopologySequence sequence = 4;
     }
     repeated ValueList values = 5;
@@ -40,29 +40,29 @@ message BatchCreateInstancesReq {
 
 message GetInstanceReq {
     AuthToken token = 1;
-    int64 id = 2;
+    string id = 2;
     bool return_action_id = 3;
     bool return_topology_id = 4;
 }
 
 message UpdateInstanceReq {
     AuthToken token = 1;
-    int64 id = 2;
+    string id = 2;
     ValueList values = 3;
 }
 
 message DeleteInstanceReq {
     AuthToken token = 1;
-    int64 id = 2;
+    string id = 2;
 }
 
 
 message InstanceRes {
     Status status = 1;
-    int64 id = 2;
+    string id = 2;
     ValueList values = 3;
-    int64 action_id = 4;
-    int64 topology_id = 5;
+    string action_id = 4;
+    string topology_id = 5;
 }
 
 
