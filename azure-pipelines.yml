@@ -31,7 +31,7 @@ steps:
     mkdir -p /tmp/go.dynactionize.com
     REPO_URL="https://dynactionize@dev.azure.com/dynactionize/Dynizer/_git/go-dynagatewaytypes"
     git -c http.$REPO_URL.extraHeader="Authorization: Basic $(PAT_ENC)" clone $REPO_URL /tmp/go.dynactionize.com/dynagatewaytypes
-    make go
+    make GO_PREFIX=/tmp go
     cd /tmp/go.dynactionize.com/dynagatewaytypes
     git add --all
     git commit -m "$(Build.BuildNumber)"
