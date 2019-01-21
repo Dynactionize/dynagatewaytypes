@@ -27,10 +27,13 @@ steps:
 - template: git-user.yaml@templates
 
 - script: |
-    git clone https://$(PAT):PAT@dev.azure.com/dynactionize/Dynizer/_git/go-dynagatewaytypes $GOPATH/src/go.dynactionize.com/dynagatewaytypes
+    go get -u gopkg.in/yaml.v2
+    mkdir -p /tmp/go.dynactionize.com
+    REPO_URL="https://dynactionize@dev.azure.com/dynactionize/Dynizer/_git/go-dynagatewaytypes"
+    git -c http.$REPO_URL.extraHeader="Authorization: Basic $(PAT_ENC)" clone $REPO_URL /tmp/go.dynactionize.com/dynagatewaytypes
     make go
-    cd $GOPATH/src/go.dynactionize.com/dynagatewaytypes
+    cd /tmp/go.dynactionize.com/dynagatewaytypes
     git add --all
     git commit -m "$(Build.BuildNumber)"
-    git push
+    git -c http.$REPO_URL.extraHeader="Authorization: Basic $(PAT_ENC)" push
   displayName: 'protobuf to go and push'
