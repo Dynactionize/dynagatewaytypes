@@ -59,7 +59,7 @@ message DeleteLabelReq {
     int32 position = 6;
 }
 
-message DeleteLabelsReq {
+message DeleteAllLabelsReq {
     AuthToken token = 1;
     oneof action {
         string action_id = 2;
@@ -71,15 +71,22 @@ message DeleteLabelsReq {
     }
 }
 
-message LabelsRes {
-    Status status = 1;
-    repeated LabelPosition labels = 2;
+message GetLabelsResItem {
+    repeated LabelPosition labels = 1;
+}
+
+message GetLabelsRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        GetLabelsResItem item = 3;
+    }
 }
 
 service LabelService {
-    rpc Create(CreateLabelsReq) returns(Status);
-    rpc Get(GetLabelsReq) returns(LabelsRes);
-    rpc Rename(RenameLabelReq) returns(Status);
-    rpc Delete(DeleteLabelReq) returns(Status);
-    rpc DeleteAll(DeleteLabelsReq) returns(Status);
+    rpc Create(stream CreateLabelsReq) returns(stream EmptyStreamRes);
+    rpc Get(stream GetLabelsReq) returns(stream GetLabelsRes);
+    rpc Rename(stream RenameLabelReq) returns(stream EmptyStreamRes);
+    rpc Delete(stream DeleteLabelReq) returns(stream EmptyStreamRes);
+    rpc DeleteAll(stream DeleteAllLabelsReq) returns(stream EmptyStreamRes);
 }

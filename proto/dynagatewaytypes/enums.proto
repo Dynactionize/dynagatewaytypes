@@ -29,5 +29,106 @@ enum DataType {
     UNSIGNED_INTEGER = 9;
     BINARY = 10;
     UUID = 11;
+    TEXT = 12;
+    reserved 13 to max;
+}
+
+enum WhereObject {
+    // - TopologyFilter
+    // - InstanceFilter
+    WO_ACTION_ID = 0;
+
+    // - TopologyFilter
+    // - InstanceFilter
+    WO_ACTION_NAME = 1;
+
+    // - ActionFilter
+    // - InstanceFilter
+    WO_TOPOLOGY_ID = 2;
+
+    // - ActionFilter
+    // - InstanceFilter
+    WO_TOPOLOGY_SEQUENCE = 3;
+
+    // - ActionFilter
+    // - InstanceFilter
+    WO_TOPOLOGY_LENGTH = 4;
+
+    // - ActionFilter
+    // - TopologyFilter
+    WO_TOPOLOGY_COMPONENT = 5;
+
+
+    // - ActionFilter
+    // - TopologyFilter
+    // - InstanceFilter
+    WO_VALUE = 6;
+
+
+    // - ActionFilter
+    // - InstanceFilter
+    WO_INSTANCE_ID = 7;
+
+    reserved 8 to max;
+}
+
+enum WhereOperator {
+    EQUAL = 0;
+    NOT_EQUAL = 1;
+    IN = 2;
+    NOT_IN = 3;
+    LIKE = 4;           // String matching --> String indx
+    NOT_LIKE = 5;
+    GREATER_THAN = 6;
+    LESS_THAN = 7;
+    GREATER_OR_EQUAL_THAN = 8;
+    LESS_OR_EQUAL_THAN = 9;
+    BETWEEN = 10;
+    CONTAINS = 11;      // Full text search --> Text index
+
     reserved 12 to max;
+}
+
+enum LogicalOperator {
+    AND = 0;
+    OR = 1;
+    AND_NOT = 2;
+    OR_NOT = 3;
+
+    reserved 4 to max;
+}
+
+enum InstanceSubSetSelector {
+    ACTION_TOPOLOGY = 0;
+    ACTION = 1;
+    TOPOLOGY = 2;
+
+    reserved 3 to max;
+}
+
+enum SortObject {
+    SO_NONE = 0;
+    // - ActionSortField
+    // - InstanceSortField
+    // - GroupSortField
+    SO_ACTION_NAME = 1;
+
+    // - TopologySortField
+    // - InstanceSortField
+    // - GroupSortField
+    SO_TOPOLOGY_LENGTH = 2;
+
+    reserved 3 to max;
+}
+
+enum SortFunction {
+    SF_NONE = 0;
+    SF_SECOND = 1;
+    SF_MINUTE = 2;
+    SF_HOUR = 3;
+    SF_DAY = 4;
+    SF_MONTH = 5;
+    SF_YEAR = 6;
+
+    reserved 7 to max;
 }

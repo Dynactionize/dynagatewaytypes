@@ -21,23 +21,6 @@ message CreateInstanceReq {
     ValueList values = 6;
 }
 
-message InstanceBatch {
-    oneof action {
-        string action_id = 1;
-        string name = 2;
-    }
-    oneof topology {
-        string topology_id = 3;
-        TopologySequence sequence = 4;
-    }
-    repeated ValueList values = 5;
-}
-
-message BatchCreateInstancesReq {
-    AuthToken token = 1;
-    repeated InstanceBatch batches = 2;
-}
-
 message GetInstanceReq {
     AuthToken token = 1;
     string id = 2;
@@ -56,20 +39,37 @@ message DeleteInstanceReq {
     string id = 2;
 }
 
-
-message InstanceRes {
-    Status status = 1;
-    string id = 2;
-    ValueList values = 3;
-    string action_id = 4;
-    string topology_id = 5;
+message InstanceResItem {
+    string id = 1;
+    ValueList values = 2;
+    string action_id = 3;
+    string topology_id = 4;
 }
 
+message GetInstanceRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        InstanceResItem item = 3;
+    }
+}
+
+message CreateInstanceResItem {
+    string id = 1;
+}
+
+message CreateInstanceRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        CreateInstanceResItem item = 3;
+    }
+}
 
 service InstanceService {
-    rpc Create(CreateInstanceReq) returns(Status);
-    rpc BatchCreate(BatchCreateInstancesReq) returns(Status);
-    rpc Get(GetInstanceReq) returns(InstanceRes);
-    rpc Update(UpdateInstanceReq) returns(Status);
-    rpc Delete(DeleteInstanceReq) returns(Status);
+    rpc Create(stream CreateInstanceReq) returns(stream CreateInstanceRes);
+    rpc Count(CountReq) returns(CountRes);
+    rpc Get(stream GetInstanceReq) returns(stream GetInstanceRes);
+    rpc Update(stream UpdateInstanceReq) returns(stream EmptyStreamRes);
+    rpc Delete(stream DeleteInstanceReq) returns(stream EmptyStreamRes);
 }

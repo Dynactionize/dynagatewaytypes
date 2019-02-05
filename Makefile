@@ -54,8 +54,6 @@ go: ${GOPATH}/bin/protoc-gen-go
 		   --go_out=plugins=grpc:${GO_PREFIX} \
 		   $(WD)/proto/dynagatewaytypes/*.proto
 
-	go run generator/gen_errors.go -- errors/errors.yml ${GO_PREFIX}/go.dynactionize.com/dynagatewaytypes/errors.go
-
 clean_go:
 	-rm -f $(GO_PREFIX)/go.dynactionize.com/dynagatewaytypes/*.pb.go
 	-rm -f $(GO_PREFIX)/go.dynactionize.com/dynagatewaytypes/errors.go

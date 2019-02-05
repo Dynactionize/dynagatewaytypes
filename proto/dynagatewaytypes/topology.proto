@@ -19,17 +19,34 @@ message GetTopologyReq {
         string id = 2;
         TopologySequence sequence = 3;
     }
-    bool return_full_object = 4;
 }
 
+message CreateTopologyResItem {
+    string id = 1;
+}
 
-message TopologyRes {
-    Status status = 1;
-    string id = 2;
-    TopologySequence sequence = 3;
+message CreateTopologyRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        CreateTopologyResItem item = 3;
+    }
+}
+
+message TopologyResItem {
+    string id = 1;
+    TopologySequence sequence = 2;
+}
+
+message GetTopologyRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        TopologyResItem item = 3;
+    }
 }
 
 service TopologyService {
-    rpc Create(CreateTopologyReq) returns(TopologyRes);
-    rpc Get(GetTopologyReq) returns(TopologyRes);
+    rpc Create(stream CreateTopologyReq) returns(stream CreateTopologyRes);
+    rpc Get(stream GetTopologyReq) returns(stream GetTopologyRes);
 }

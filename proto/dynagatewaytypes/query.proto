@@ -6,107 +6,14 @@ option java_generic_services = true;
 
 import "dynagatewaytypes/enums.proto";
 import "dynagatewaytypes/general_types.proto";
+import "dynagatewaytypes/action.proto";
+import "dynagatewaytypes/topology.proto";
+import "dynagatewaytypes/instance.proto";
 
 package dynagatewaytypes;
 
-enum WhereObject {
-    // - TopologyFilter
-    // - InstanceFilter
-    WO_ACTION_ID = 0;
 
-    // - TopologyFilter
-    // - InstanceFilter
-    WO_ACTION_NAME = 1;
-
-    // - ActionFilter
-    // - InstanceFilter
-    WO_TOPOLOGY_ID = 2;
-
-    // - ActionFilter
-    // - InstanceFilter
-    WO_TOPOLOGY_SEQUENCE = 3;
-
-    // - ActionFilter
-    // - InstanceFilter
-    WO_TOPOLOGY_LENGTH = 4;
-
-    // - ActionFilter
-    // - TopologyFilter
-    WO_TOPOLOGY_COMPONENT = 5;
-
-
-    // - ActionFilter
-    // - TopologyFilter
-    // - InstanceFilter
-    WO_VALUE = 6;
-
-
-    // - ActionFilter
-    // - InstanceFilter
-    WO_INSTANCE_ID = 7;
-
-    reserved 8 to max;
-}
-
-enum WhereOperator {
-    EQUAL = 0;
-    NOT_EQUAL = 1;
-    IN = 2;
-    NOT_IN = 3;
-    LIKE = 4;
-    NOT_LIKE = 5;
-    GREATER_THAN = 6;
-    LESS_THAN = 7;
-    GREATER_OR_EQUAL_THAN = 8;
-    LESS_OR_EQUAL_THAN = 9;
-    BETWEEN = 10;
-
-    reserved 11 to max;
-}
-
-enum LogicalOperator {
-    AND = 0;
-    OR = 1;
-    AND_NOT = 2;
-    OR_NOT = 3;
-
-    reserved 4 to max;
-}
-
-enum InstanceGroupBy {
-    ACTION_TOPOLOGY = 0;
-    ACTION = 1;
-    TOPOLOGY = 2;
-
-    reserved 3 to max;
-}
-
-enum SortObject {
-    // - ActionSortField
-    // - GroupSortField
-    SO_ACTION_ID = 0;
-
-    // - ActionSortField
-    // - InstanceSortField
-    // - GroupSortField
-    SO_ACTION_NAME = 1;
-
-    // - TopologySortField
-    // - GroupSortField
-    SO_TOPOLOGY_ID = 2;
-
-    // - TopologySortField
-    // - InstanceSortField
-    // - GroupSortField
-    SO_TOPOLOGY_LENGTH = 3;
-
-    // - InstanceSortField
-    SO_INSTANCE_ID = 4;
-
-    reserved 5 to max;
-}
-
-message CountReq {
+message CursorCountReq {
     AuthToken token = 1;
     string cursor = 2;
 }
@@ -150,32 +57,29 @@ message ComponentFilter {
     string label = 3;
 }
 
-message CountRes {
-    Status status = 1;
+message ActionQueryRes {
+    string cursor = 1;
     int64 count = 2;
 }
 
-message ActionQueryRes {
-    Status status = 1;
-    string cursor = 2;
-    int64 count = 3;
-}
-
 message TopologyQueryRes {
-    Status status = 1;
-    string cursor = 2;
-    int64 count = 3;
+    string cursor = 1;
+    int64 count = 2;
 }
 
 message InstanceQueryRes {
-    Status status = 1;
-    string cursor = 2;
-    int64 count = 3;
-    int64 number_action_topologies = 4;
-    int64 number_actions = 5;
-    int64 number_topologies = 6;
+    string cursor = 1;
+    int64 count = 2;
+    int64 number_action_topologies = 3;
+    int64 number_actions = 4;
+    int64 number_topologies = 5;
 }
 
+message WideColumnQueryRes {
+    string cursor = 1;
+    int64 count = 2;
+    repeated string column_names = 3;
+}
 
 message ActionFetchReq {
     AuthToken token = 1;
@@ -196,36 +100,52 @@ message InstanceFetchReq {
     string cursor = 2;
     repeated InstanceSortField sorting = 3;
     Window window = 4;
+    bool return_action_id = 5;
+    bool return_topology_id = 6;
 }
 
-message InstanceGroupFetchReq {
+message GetSubSetMetaDataReq {
+    AuthToken token = 1;
+    string cursor = 2;
+    InstanceSubSetSelector selector = 3;
+    bool return_labels = 4;
+}
+
+message GetWideColumnNamesReq {
+    AuthToken token = 1;
+    string cursor = 2;
+}
+
+message CountSubSetInstancesReq {
+    AuthToken token = 1;
+    string cursor = 2;
+    oneof sub_set_meta_data {
+        ActionSubSetMetaData action_meta_data = 3;
+        TopologySubSetMetaData topology_meta_data = 4;
+        ActionTopologyPairSubSetMetaData action_topology_pair_meta_data = 5;
+    }
+}
+
+message FetchInstanceSubSetReq {
     AuthToken token = 1;
     string cursor = 2;
     repeated InstanceSortField sorting = 3;
-    InstanceGroupBy group_by = 4;
-    repeated GroupSortField group_sorting = 5;
-    int64 current_group = 6;
+    oneof sub_set_meta_data {
+        ActionSubSetMetaData action_meta_data = 4;
+        TopologySubSetMetaData topology_meta_data = 5;
+        ActionTopologyPairSubSetMetaData action_topology_pair_meta_data = 6;
+    }
     Window window = 7;
-    bool omit_labels = 8;
-}
-
-message InstanceGroupedFetchReq {
-    AuthToken token = 1;
-    string cursor = 2;
-    repeated InstanceSortField sorting = 3;
-    InstanceGroupBy group_by = 4;
-    repeated GroupSortField group_sorting = 5;
-    repeated Window group_windows = 6;
-    bool omit_labels = 7;
 }
 
 message WideColumnTableFetchReq {
     AuthToken token = 1;
     string cursor = 2;
-    GroupSortField sorting = 3;
-    Window window = 4;
-    bool include_action_id = 5;
-    bool include_topology_id = 6;
+    Window window = 3;
+    bool include_action_id = 4;
+    bool include_topology_id = 5;
+    bool include_row_number = 6;
+    repeated InstanceSortField sorting = 7;
 }
 
 message ActionSortField {
@@ -238,25 +158,22 @@ message TopologySortField {
     bool descending = 2;
 }
 
+message DataTypeSortFunctions {
+    DataType data_type = 1;
+    repeated SortFunction sort_function = 2;
+}
+
 message InstanceSortField {
     oneof field {
         SortObject object = 1;
         int32 topology_position = 2;
+        string label = 3;
     }
-    bool descending = 5;
+    bool descending = 4;
+    repeated DataTypeSortFunctions sort_functions = 5;
 }
 
-message GroupSortField {
-    SortObject field = 1;
-    bool descending = 2;
-}
-
-message Window {
-    int64 offset = 1;
-    int64 size = 2;
-}
-
-message WideColumnRow {
+message WideColumnItem {
     string instance_id = 1;
     repeated ValueList cells = 2; 
     string action_id = 3;
@@ -264,41 +181,83 @@ message WideColumnRow {
 }
 
 message ActionFetchRes {
-    Status status = 1;
-    repeated Action actions = 2;
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        ActionResItem item = 3;
+    }
 }
 
 message TopologyFetchRes {
-    Status status = 1;
-    repeated Topology topologies = 2;
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        TopologyResItem item = 3;
+    }
 }
 
 message InstanceFetchRes {
-    Status status = 1;
-    repeated Instance instances = 3;
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        InstanceResItem item = 3;
+    }
 }
 
-message InstanceGroupFetchRes {
-    Status status = 1;
-    InstanceGroup group = 2;
+message ActionSubSetMetaData {
+    repeated Action actions = 1;
 }
 
-message InstanceGroupedFetchRes {
-    Status status = 1;
-    repeated InstanceGroup groups = 2;
+message TopologySubSetMetaData {
+    repeated Topology topologies = 1;
+}
+
+message ActionTopologyPair {
+    Action action = 1;
+    Topology topology = 2;
+    repeated string labels = 3;
+}
+
+message ActionTopologyPairSubSetMetaData {
+    repeated ActionTopologyPair action_topology_pairs = 1;
+}
+
+message GetSubSetMetaDataRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        GetSubSetMetaDataResItem item = 3;
+    }
+}
+
+message GetSubSetMetaDataResItem {
+    int64 count = 1;
+    oneof meta_data {
+        ActionSubSetMetaData action_meta_data = 2;
+        TopologySubSetMetaData topology_meta_data = 3;
+        ActionTopologyPairSubSetMetaData action_topology_pair_meta_data = 4;
+    }
+}
+
+message GetWideColumnNamesRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        GetWideColumnNamesResItem item = 3;
+    }
+}
+
+message GetWideColumnNamesResItem {
+    string column_name = 1;
+    int64 column_position = 2;
 }
 
 message WideColumnTableFetchRes {
-    Status status = 1;
-    repeated string column_names = 2;
-    repeated WideColumnRow rows = 3;
-}
-
-message InstanceGroup {
-    string action_id = 1;
-    string topology_id = 2;
-    repeated string labels = 3;
-    repeated Instance instances = 4;
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        WideColumnItem item = 3;
+    }
 }
 
 service QueryService {
@@ -306,14 +265,18 @@ service QueryService {
     rpc Topology(QueryReq) returns (TopologyQueryRes);
     rpc Instance(QueryReq) returns (InstanceQueryRes);
     
-    rpc CountActions(CountReq) returns (CountRes);
-    rpc CountTopologies(CountReq) returns (CountRes);
-    rpc CountInstances(CountReq) returns (CountRes);
+    rpc GetSubSetMetaData(GetSubSetMetaDataReq) returns (stream GetSubSetMetaDataRes);
+    rpc GetWideColumnNames(GetWideColumnNamesReq) returns (stream GetWideColumnNamesRes);
 
-    rpc FetchActions(ActionFetchReq) returns (ActionFetchRes);
-    rpc FetchTopologies(TopologyFetchReq) returns (TopologyFetchRes);
-    rpc FetchInstances(InstanceFetchReq) returns (InstanceFetchRes);
-    rpc FetchGroupInstances(InstanceGroupFetchReq) returns (InstanceGroupFetchRes);
-    rpc FetchGroupedInstances(InstanceGroupedFetchReq) returns (InstanceGroupedFetchRes);
-    rpc FetchWideColumnTable(WideColumnTableFetchReq) returns (WideColumnTableFetchRes);
+    rpc CountActions(CursorCountReq) returns (CountRes);
+    rpc CountTopologies(CursorCountReq) returns (CountRes);
+    rpc CountInstances(CursorCountReq) returns (CountRes);
+    rpc CountSubSetInstances(CountSubSetInstancesReq) returns (CountRes);
+    rpc CountWideColumnNames(CursorCountReq) returns (CountRes);
+
+    rpc FetchActions(ActionFetchReq) returns (stream ActionFetchRes);
+    rpc FetchTopologies(TopologyFetchReq) returns (stream TopologyFetchRes);
+    rpc FetchInstances(InstanceFetchReq) returns (stream InstanceFetchRes);
+    rpc FetchInstanceSubSet(FetchInstanceSubSetReq) returns (stream InstanceFetchRes);
+    rpc FetchWideColumnTable(WideColumnTableFetchReq) returns (stream WideColumnTableFetchRes);
 }

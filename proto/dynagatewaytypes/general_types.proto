@@ -9,23 +9,43 @@ import "dynagatewaytypes/datatypes.proto";
 
 package dynagatewaytypes;
 
-message Status {
-    bool success = 1;
-    int64 code = 2;
+message StreamElementError {
+    int64 code = 1;
+    int64 dynizer_code = 2;
     string message = 3;
+    string uuid = 4;
+}
+
+message ErrorMeta {
+    int64 dynizer_code = 1;
+    string uuid = 2;
+}
+
+message EmptyStreamRes {
+    int64 stream_index = 1;
+    StreamElementError error = 2;
+}
+
+message Window {
+    int64 offset = 1;
+    int64 size = 2;
+}
+
+message CountReq {
+    AuthToken token = 1;
+}
+
+message CountRes {
+    int64 count = 1;
 }
 
 message ShowReq {
     AuthToken token = 1;
+    Window window = 2;
 }
 
 message TopologySequence {
     repeated ComponentType components = 1;
-}
-
-message LabelPosition {
-    string label = 1;
-    int32 position = 2;
 }
 
 message Value {
@@ -42,6 +62,7 @@ message Value {
         bytes binary_value = 107;
         Timestamp timestamp_value = 108;
         string uuid_value = 109;
+        string text_value = 110;
     }
 }
 
@@ -63,7 +84,13 @@ message Topology {
     TopologySequence sequence = 2;
 }
 
-message Instance {
-    string id = 1; 
-    repeated Value values = 2;
+message LabelPosition {
+    string label = 1;
+    int32 position = 2;
+}
+
+message EmptyReq {
+}
+
+message EmptyRes {
 }

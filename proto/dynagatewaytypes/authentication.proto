@@ -37,8 +37,7 @@ message GetTokenReq {
 }
 
 message GetTokenRes {
-    Status status = 1;
-    AuthToken token = 2;
+    AuthToken token = 1;
 }
 
 message LoginURIReq {
@@ -46,8 +45,7 @@ message LoginURIReq {
 }
 
 message LoginURIRes {
-    Status status = 1;
-    string uri = 2;
+    string uri = 1;
 }
 
 message GetSessionInfoReq {
@@ -55,8 +53,7 @@ message GetSessionInfoReq {
 }
 
 message GetSessionInfoRes{
-    Status status = 1;
-    Session session = 2;
+    Session session = 1;
 }
 
 service AuthenticateService {

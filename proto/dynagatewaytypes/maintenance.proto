@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+option java_generic_services = true;
+
+import "dynagatewaytypes/general_types.proto";
+
+package dynagatewaytypes;
+
+message DropDataReq {
+    AuthToken token = 1;
+}
+
+message GetVersionRes{
+    int32 major = 1;
+    int32 minor = 2;
+    int32 patch = 3;
+}
+
+service MaintenanceService {
+    rpc DropData(DropDataReq) returns (EmptyRes);
+    rpc GetVersion(EmptyReq) returns (GetVersionRes);
+}

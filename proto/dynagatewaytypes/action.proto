@@ -8,7 +8,6 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
-
 message CreateActionReq {
     AuthToken token = 1;
     string name = 2;
@@ -20,7 +19,6 @@ message GetActionReq {
         string id = 2;
         string name = 3;
     };
-    bool return_full_object = 4;
 }
 
 message RenameActionReq {
@@ -31,26 +29,43 @@ message RenameActionReq {
 
 message DeleteActionReq {
     AuthToken token = 1;
-    string id = 2;
-    bool cascade = 3;
+    oneof selector {
+        string id = 2;
+        string name = 3;
+    }
+    bool cascade = 4;
 }
 
-message ActionRes {
-    Status status = 1;
-    string id = 2;
-    string name = 4;
+message CreateActionRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        CreateActionResItem item = 3;
+    }
 }
 
-message ActionsRes{
-    Status status = 1;
-    int64 num_actions = 2;
-    repeated Action actions = 3;
+message CreateActionResItem {
+    string id = 1;
+}
+
+message GetActionRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        ActionResItem item = 3;
+    }
+}
+
+message ActionResItem {
+    string id = 1;
+    string name = 2;
 }
 
 service ActionService {
-    rpc Create(CreateActionReq) returns(ActionRes);
-    rpc Get(GetActionReq) returns(ActionRes);
-    rpc Show(ShowReq) returns(ActionsRes);
-    rpc Rename(RenameActionReq) returns(Status);
-    rpc Delete(DeleteActionReq) returns(Status);
+    rpc Create(stream CreateActionReq) returns(stream CreateActionRes);
+    rpc Get(stream GetActionReq) returns(stream GetActionRes);
+    rpc Count(CountReq) returns(CountRes);
+    rpc Show(ShowReq) returns(stream GetActionRes);
+    rpc Rename(stream RenameActionReq) returns(stream EmptyStreamRes);
+    rpc Delete(stream DeleteActionReq) returns(stream EmptyStreamRes);
 }
