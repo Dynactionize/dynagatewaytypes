@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+option go_package = "go.dynactionize.com/dynagatewaytypes";
+option java_package = "com.dynactionize.dynagatewaytypes";
+option java_generic_services = true;
+
+import "dynagatewaytypes/general_types.proto";
+
+package dynagatewaytypes;
+
+message NetworkQueryReq {
+    AuthToken token = 1;
+    string root_instance_id = 2;
+    repeated NetworkQueryContext query_context = 3;
+    repeated NetworkLabelMapping label_mapping = 4;
+    bool overlay_on_component = 5;
+    bool overlay_on_label = 6;
+    repeated NetworkOverlayOptions overlay_options = 7;
+    bool no_internal_linking = 8;
+    int32 extent = 9;
+}
+
+message NetworkQueryRes {
+    string cursor = 1;
+    int64 node_count = 2;
+    int64 link_count = 3;
+}
+
+message NetworkNodesFetchReq {
+    AuthToken token = 1;
+    string cursor = 2;
+    Window window = 3;
+}
+
+message NetworkNodesFetchRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        NetworkNode node = 3;
+    }
+}
+
+message NetworkAllLinksFetchReq {
+    AuthToken token = 1;
+    string cursor = 2;
+}
+
+message NetworkLinksFromNodeFetchReq {
+    AuthToken token = 1;
+    string cursor = 2;
+    string node_id = 3;
+}
+
+message NetworkPathToNodeFetchReq {
+    AuthToken token = 1;
+    string cursor = 2;
+    string target_node_id = 3;
+}
+
+message NetworkLinksFetchRes {
+    int64 stream_index = 1;
+    oneof response {
+        StreamElementError error = 2;
+        NetworkLink link = 3;
+    }
+}
+
+
+
+message NetworkQueryContext {
+    oneof selector {
+        string action_id = 1;
+        string action_name = 2;
+    }
+}
+
+message NetworkLabelMapping {
+    ActionLabelPair element1 = 1;
+    ActionLabelPair element2 = 2;
+}
+
+message ActionLabelPair {
+    oneof selector {
+        string action_id = 1;
+        string action_name = 2;
+    }
+    string label = 3;
+}
+
+message NetworkOverlayOptions {
+    oneof selector {
+        string action_id = 1;
+        string action_name = 2;
+    }
+    oneof exclude_include_selector {
+        NetworkExcludePositions exclude_positions = 3;
+        NetworkIncludePositions include_positions = 4;
+        NetworkExcludeLabels exclude_labels = 5;
+        NetworkIncludeLabels include_labels = 6;
+    }
+    repeated NetworkElementOverlayOptions element_overlay_options = 7;
+    bool no_internal_linking = 8;
+}
+
+message NetworkExcludePositions {
+    repeated int32 positions = 1;
+}
+
+message NetworkIncludePositions {
+    repeated int32 positions = 1;
+}
+
+message NetworkExcludeLabels {
+    repeated string labels = 1;
+}
+
+message NetworkIncludeLabels {
+    repeated string labels = 2;
+}
+
+message NetworkElementOverlayOptions {
+    oneof selector {
+        int32 position = 1;
+        string label = 2;
+    }
+    bool overlay_on_component = 3;
+    bool overlay_on_label = 4;
+}
+
+message NetworkNode {
+    Action action = 1;
+    Topology topology = 2;
+    repeated LabelPosition labels = 3;
+    string id = 4;
+    ValueList values = 5;
+}
+
+message NetworkLink {
+    string id1 = 1;
+    string id2 = 2;
+}
+
+service NetworkService {
+    rpc Query(NetworkQueryReq) returns(NetworkQueryRes);
+    rpc FetchNodes(NetworkNodesFetchReq) returns(stream NetworkNodesFetchRes);
+    rpc FetchAllLinks(NetworkAllLinksFetchReq) returns(stream NetworkLinksFetchRes);
+    rpc FetchLinksFromNode(NetworkLinksFromNodeFetchReq) returns(stream NetworkLinksFetchRes);
+    rpc FetchPathToNode(NetworkPathToNodeFetchReq) returns(stream NetworkLinksFetchRes);
+}
