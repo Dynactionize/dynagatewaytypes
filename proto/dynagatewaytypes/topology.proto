@@ -9,12 +9,10 @@ import "dynagatewaytypes/general_types.proto";
 package dynagatewaytypes;
 
 message CreateTopologyReq {
-    AuthToken token = 1;
     TopologySequence sequence = 2;
 }
 
 message GetTopologyReq {
-    AuthToken token = 1;
     oneof selector {
         string id = 2;
         TopologySequence sequence = 3;

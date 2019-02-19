@@ -8,10 +8,6 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
-message DropDataReq {
-    AuthToken token = 1;
-}
-
 message GetVersionRes{
     int32 major = 1;
     int32 minor = 2;
@@ -19,6 +15,6 @@ message GetVersionRes{
 }
 
 service MaintenanceService {
-    rpc DropData(DropDataReq) returns (EmptyRes);
+    rpc DropData(EmptyReq) returns (EmptyRes);
     rpc GetVersion(EmptyReq) returns (GetVersionRes);
 }

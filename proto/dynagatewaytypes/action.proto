@@ -9,12 +9,10 @@ import "dynagatewaytypes/general_types.proto";
 package dynagatewaytypes;
 
 message CreateActionReq {
-    AuthToken token = 1;
     string name = 2;
 }
 
 message GetActionReq {
-    AuthToken token = 1;
     oneof selector {
         string id = 2;
         string name = 3;
@@ -22,13 +20,11 @@ message GetActionReq {
 }
 
 message RenameActionReq {
-    AuthToken token = 1;
     string id = 2;
     string name = 3;
 }
 
 message DeleteActionReq {
-    AuthToken token = 1;
     oneof selector {
         string id = 2;
         string name = 3;
@@ -64,7 +60,7 @@ message ActionResItem {
 service ActionService {
     rpc Create(stream CreateActionReq) returns(stream CreateActionRes);
     rpc Get(stream GetActionReq) returns(stream GetActionRes);
-    rpc Count(CountReq) returns(CountRes);
+    rpc Count(EmptyReq) returns(CountRes);
     rpc Show(ShowReq) returns(stream GetActionRes);
     rpc Rename(stream RenameActionReq) returns(stream EmptyStreamRes);
     rpc Delete(stream DeleteActionReq) returns(stream EmptyStreamRes);

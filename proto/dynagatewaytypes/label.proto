@@ -9,7 +9,6 @@ import "dynagatewaytypes/general_types.proto";
 package dynagatewaytypes;
 
 message CreateLabelsReq {
-    AuthToken token = 1;
     oneof action {
         string action_id = 2;
         string name = 3;
@@ -22,7 +21,6 @@ message CreateLabelsReq {
 }
 
 message GetLabelsReq {
-    AuthToken token = 1;
     oneof action {
         string action_id = 2;
         string name = 3;
@@ -34,7 +32,6 @@ message GetLabelsReq {
 }
 
 message RenameLabelReq {
-    AuthToken token = 1;
     oneof action {
         string action_id = 2;
         string name = 3;
@@ -47,7 +44,6 @@ message RenameLabelReq {
 }
 
 message DeleteLabelReq {
-    AuthToken token = 1;
     oneof action {
         string action_id = 2;
         string name = 3;
@@ -60,7 +56,6 @@ message DeleteLabelReq {
 }
 
 message DeleteAllLabelsReq {
-    AuthToken token = 1;
     oneof action {
         string action_id = 2;
         string name = 3;

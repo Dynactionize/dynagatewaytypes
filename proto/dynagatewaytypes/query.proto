@@ -14,12 +14,10 @@ package dynagatewaytypes;
 
 
 message CursorCountReq {
-    AuthToken token = 1;
     string cursor = 2;
 }
 
 message QueryReq {
-    AuthToken token = 1;
     oneof root {
         WhereClauseBranchNode branch = 2;
         WhereClauseLeafNode leaf = 3;
@@ -82,21 +80,18 @@ message WideColumnQueryRes {
 }
 
 message ActionFetchReq {
-    AuthToken token = 1;
     string cursor = 2;
     repeated ActionSortField sorting = 3;
     Window window = 4;
 }
 
 message TopologyFetchReq {
-    AuthToken token = 1;
     string cursor = 2;
     repeated TopologySortField sorting = 3;
     Window window = 4;
 }
 
 message InstanceFetchReq {
-    AuthToken token = 1;
     string cursor = 2;
     repeated InstanceSortField sorting = 3;
     Window window = 4;
@@ -105,19 +100,16 @@ message InstanceFetchReq {
 }
 
 message GetSubSetMetaDataReq {
-    AuthToken token = 1;
     string cursor = 2;
     InstanceSubSetSelector selector = 3;
     bool return_labels = 4;
 }
 
 message GetWideColumnNamesReq {
-    AuthToken token = 1;
     string cursor = 2;
 }
 
 message CountSubSetInstancesReq {
-    AuthToken token = 1;
     string cursor = 2;
     oneof sub_set_meta_data {
         ActionSubSetMetaData action_meta_data = 3;
@@ -127,7 +119,6 @@ message CountSubSetInstancesReq {
 }
 
 message FetchInstanceSubSetReq {
-    AuthToken token = 1;
     string cursor = 2;
     repeated InstanceSortField sorting = 3;
     oneof sub_set_meta_data {
@@ -139,7 +130,6 @@ message FetchInstanceSubSetReq {
 }
 
 message WideColumnTableFetchReq {
-    AuthToken token = 1;
     string cursor = 2;
     Window window = 3;
     bool include_action_id = 4;

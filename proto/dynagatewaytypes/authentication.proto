@@ -4,8 +4,6 @@ option go_package = "go.dynactionize.com/dynagatewaytypes";
 option java_package = "com.dynactionize.dynagatewaytypes";
 option java_generic_services = true;
 
-import "dynagatewaytypes/general_types.proto";
-
 package dynagatewaytypes;
 
 message UserAuth {
@@ -37,7 +35,7 @@ message GetTokenReq {
 }
 
 message GetTokenRes {
-    AuthToken token = 1;
+    string token = 1;
 }
 
 message LoginURIReq {
@@ -49,7 +47,7 @@ message LoginURIRes {
 }
 
 message GetSessionInfoReq {
-    AuthToken token = 1;
+    string session_id = 1;
 }
 
 message GetSessionInfoRes{
@@ -59,5 +57,5 @@ message GetSessionInfoRes{
 service AuthenticateService {
     rpc LoginURI(LoginURIReq) returns(LoginURIRes);
     rpc GetToken(GetTokenReq) returns(GetTokenRes);
-    rpc SessionInfo(GetSessionInfoReq) returns(GetSessionInfoRes);
+    rpc GetSessionInfo(GetSessionInfoReq) returns(GetSessionInfoRes);
 }

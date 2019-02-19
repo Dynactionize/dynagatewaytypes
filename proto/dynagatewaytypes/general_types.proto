@@ -31,16 +31,11 @@ message Window {
     int64 size = 2;
 }
 
-message CountReq {
-    AuthToken token = 1;
-}
-
 message CountRes {
     int64 count = 1;
 }
 
 message ShowReq {
-    AuthToken token = 1;
     Window window = 2;
 }
 
@@ -68,10 +63,6 @@ message Value {
 
 message ValueList {
     repeated Value values = 1;
-}
-
-message AuthToken {
-    string jwt = 1;
 }
 
 message Action {

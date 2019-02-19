@@ -9,7 +9,6 @@ import "dynagatewaytypes/general_types.proto";
 package dynagatewaytypes;
 
 message CreateInstanceReq {
-    AuthToken token = 1;
     oneof action {
         string action_id = 2;
         string name = 3;
@@ -22,20 +21,17 @@ message CreateInstanceReq {
 }
 
 message GetInstanceReq {
-    AuthToken token = 1;
     string id = 2;
     bool return_action_id = 3;
     bool return_topology_id = 4;
 }
 
 message UpdateInstanceReq {
-    AuthToken token = 1;
     string id = 2;
     ValueList values = 3;
 }
 
 message DeleteInstanceReq {
-    AuthToken token = 1;
     string id = 2;
 }
 
@@ -68,7 +64,7 @@ message CreateInstanceRes {
 
 service InstanceService {
     rpc Create(stream CreateInstanceReq) returns(stream CreateInstanceRes);
-    rpc Count(CountReq) returns(CountRes);
+    rpc Count(EmptyReq) returns(CountRes);
     rpc Get(stream GetInstanceReq) returns(stream GetInstanceRes);
     rpc Update(stream UpdateInstanceReq) returns(stream EmptyStreamRes);
     rpc Delete(stream DeleteInstanceReq) returns(stream EmptyStreamRes);

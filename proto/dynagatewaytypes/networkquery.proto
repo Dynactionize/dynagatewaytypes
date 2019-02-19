@@ -9,7 +9,6 @@ import "dynagatewaytypes/general_types.proto";
 package dynagatewaytypes;
 
 message NetworkQueryReq {
-    AuthToken token = 1;
     string root_instance_id = 2;
     repeated NetworkQueryContext query_context = 3;
     repeated NetworkLabelMapping label_mapping = 4;
@@ -27,7 +26,6 @@ message NetworkQueryRes {
 }
 
 message NetworkNodesFetchReq {
-    AuthToken token = 1;
     string cursor = 2;
     Window window = 3;
 }
@@ -41,18 +39,15 @@ message NetworkNodesFetchRes {
 }
 
 message NetworkAllLinksFetchReq {
-    AuthToken token = 1;
     string cursor = 2;
 }
 
 message NetworkLinksFromNodeFetchReq {
-    AuthToken token = 1;
     string cursor = 2;
     string node_id = 3;
 }
 
 message NetworkPathToNodeFetchReq {
-    AuthToken token = 1;
     string cursor = 2;
     string target_node_id = 3;
 }
