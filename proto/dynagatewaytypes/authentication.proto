@@ -34,6 +34,10 @@ message GetTokenReq {
     };
 }
 
+message RefreshTokenReq{
+    string token = 1;
+}
+
 message GetTokenRes {
     string token = 1;
 }
@@ -54,8 +58,13 @@ message GetSessionInfoRes{
     Session session = 1;
 }
 
+message RefreshTokenRes {
+    string token = 1;
+}
+
 service AuthenticateService {
     rpc LoginURI(LoginURIReq) returns(LoginURIRes);
     rpc GetToken(GetTokenReq) returns(GetTokenRes);
     rpc GetSessionInfo(GetSessionInfoReq) returns(GetSessionInfoRes);
+    rpc RefreshToken(RefreshTokenReq) returns(RefreshTokenRes);
 }
