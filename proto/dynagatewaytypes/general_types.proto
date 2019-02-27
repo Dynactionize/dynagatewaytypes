@@ -85,3 +85,11 @@ message EmptyReq {
 
 message EmptyRes {
 }
+
+message PositionList {
+    repeated int32 positions = 1;
+}
+
+message LabelList {
+    repeated string labels = 2;
+}

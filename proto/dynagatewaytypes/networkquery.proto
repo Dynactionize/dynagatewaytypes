@@ -8,15 +8,86 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
+
+message CreateNetworkContextReq {
+    repeated NetworkContextAction context_actions = 1;
+}
+
+message NetworkGlobalOverlaySettingsReq {
+    string context_id = 1;
+    bool overlay_on_component = 2;
+    bool overlay_on_label = 3;
+    bool no_internal_linking = 4;
+}
+
+message AddNetworkLabelMappingReq {
+    string context_id = 1;
+    NetworkActionLabelPair element1 = 2;
+    NetworkActionLabelPair element2 = 3;
+}
+
+message SetNetworkActionOverlaySettingsReq {
+    string context_id = 1;
+    oneof action {
+        string id = 2;
+        string name = 3;
+    } 
+    oneof element_selector {
+        PositionList exclude_positions = 4;
+        PositionList include_positions = 5;
+        LabelList exclude_labels = 6;
+        LabelList include_labels = 7;
+    }
+}
+
+message OverrideNetworkInternalLinkingReq {
+    string context_id = 1;
+    oneof action {
+        string id = 2;
+        string name = 3;
+    }
+    bool no_internal_linking = 4;
+}
+
+message OverrideNetworkElementOverlaySettingsReq {
+    string context_id = 1;
+    oneof action {
+        string id = 2;
+        string name = 3;
+    }
+    oneof element {
+        int32 position = 4;
+        string label = 5;
+    }
+    bool overlay_on_component = 6;
+    bool overlay_on_label = 7;
+}
+
 message NetworkQueryReq {
+    string context_id = 1;
     string root_instance_id = 2;
-    repeated NetworkQueryContext query_context = 3;
-    repeated NetworkLabelMapping label_mapping = 4;
-    bool overlay_on_component = 5;
-    bool overlay_on_label = 6;
-    repeated NetworkOverlayOptions overlay_options = 7;
-    bool no_internal_linking = 8;
-    int32 extent = 9;
+    int32 extent = 3;
+}
+
+message NetworkNodesFetchReq {
+    string cursor = 2;
+    Window window = 3;
+}
+
+message NetworkLinksFetchReq {
+    string cursor = 2;
+}
+
+
+
+message NetworkContextRes {
+    string id = 1;
+    repeated Action network_context = 2;
+    bool overlay_on_component = 3;
+    bool overlay_on_label = 4;
+    bool no_internal_linking = 5;
+    repeated NetworkLabelMapping label_mappings = 6;
+    repeated NetworkActionOverlaySettings action_overlay_settings = 7;
 }
 
 message NetworkQueryRes {
@@ -25,31 +96,12 @@ message NetworkQueryRes {
     int64 link_count = 3;
 }
 
-message NetworkNodesFetchReq {
-    string cursor = 2;
-    Window window = 3;
-}
-
 message NetworkNodesFetchRes {
     int64 stream_index = 1;
     oneof response {
         StreamElementError error = 2;
         NetworkNode node = 3;
     }
-}
-
-message NetworkAllLinksFetchReq {
-    string cursor = 2;
-}
-
-message NetworkLinksFromNodeFetchReq {
-    string cursor = 2;
-    string node_id = 3;
-}
-
-message NetworkPathToNodeFetchReq {
-    string cursor = 2;
-    string target_node_id = 3;
 }
 
 message NetworkLinksFetchRes {
@@ -62,83 +114,79 @@ message NetworkLinksFetchRes {
 
 
 
-message NetworkQueryContext {
-    oneof selector {
-        string action_id = 1;
-        string action_name = 2;
+
+message NetworkContextAction {
+    oneof action {
+        string id = 1;
+        string name = 2;
     }
 }
 
 message NetworkLabelMapping {
-    ActionLabelPair element1 = 1;
-    ActionLabelPair element2 = 2;
+    Action action1 = 1;
+    string label1 = 2;
+    Action action2 = 3;
+    string label2 = 4;
 }
 
-message ActionLabelPair {
-    oneof selector {
-        string action_id = 1;
-        string action_name = 2;
+message NetworkActionLabelPair {
+    oneof action {
+        string id = 1;
+        string name = 2;
     }
     string label = 3;
 }
 
-message NetworkOverlayOptions {
-    oneof selector {
-        string action_id = 1;
-        string action_name = 2;
-    }
-    oneof exclude_include_selector {
-        NetworkExcludePositions exclude_positions = 3;
-        NetworkIncludePositions include_positions = 4;
-        NetworkExcludeLabels exclude_labels = 5;
-        NetworkIncludeLabels include_labels = 6;
-    }
-    repeated NetworkElementOverlayOptions element_overlay_options = 7;
-    bool no_internal_linking = 8;
+message NetworkActionOverlaySettings {
+    Action action = 1;
+    repeated int32 exclude_positions = 2;
+    repeated int32 include_positions = 3;
+    repeated string exclude_labels = 4;
+    repeated string include_labels = 5;
+    bool no_internal_linking = 6;
+    repeated NetworkElementOverlaySettings element_overlay_settings = 7;
 }
 
-message NetworkExcludePositions {
-    repeated int32 positions = 1;
+message NetworkElementOverlaySettings {
+    NetworkElementSelector element = 1;
+    bool overlay_on_component = 2;
+    bool overlay_on_label = 3;
 }
 
-message NetworkIncludePositions {
-    repeated int32 positions = 1;
-}
-
-message NetworkExcludeLabels {
-    repeated string labels = 1;
-}
-
-message NetworkIncludeLabels {
-    repeated string labels = 2;
-}
-
-message NetworkElementOverlayOptions {
-    oneof selector {
-        int32 position = 1;
-        string label = 2;
-    }
-    bool overlay_on_component = 3;
-    bool overlay_on_label = 4;
+message NetworkElementSelector {
+    int32 position = 1;
+    string label = 2;
 }
 
 message NetworkNode {
-    Action action = 1;
-    Topology topology = 2;
-    repeated LabelPosition labels = 3;
+    string action_id = 1;
+    string topology_id = 2;
     string id = 4;
     ValueList values = 5;
 }
 
 message NetworkLink {
     string id1 = 1;
-    string id2 = 2;
+    int32 pos1 = 2;
+    string id2 = 3;
+    int32 pos2 = 4;
 }
 
+
+
+
+
 service NetworkService {
+    rpc CreateContext(CreateNetworkContextReq) returns(NetworkContextRes);
+    rpc SetGlobalOverlaySettings(NetworkGlobalOverlaySettingsReq) returns(NetworkContextRes);
+    rpc AddLabelMappings(stream AddNetworkLabelMappingReq) returns(NetworkContextRes);
+    rpc SetActionOverlaySettings(stream SetNetworkActionOverlaySettingsReq) returns (NetworkContextRes);
+    rpc OverrideInternalLinking(stream OverrideNetworkInternalLinkingReq) returns (NetworkContextRes);
+    rpc OverrideElementOverlaySettings(stream OverrideNetworkElementOverlaySettingsReq) returns(NetworkContextRes);
+
     rpc Query(NetworkQueryReq) returns(NetworkQueryRes);
     rpc FetchNodes(NetworkNodesFetchReq) returns(stream NetworkNodesFetchRes);
-    rpc FetchAllLinks(NetworkAllLinksFetchReq) returns(stream NetworkLinksFetchRes);
-    rpc FetchLinksFromNode(NetworkLinksFromNodeFetchReq) returns(stream NetworkLinksFetchRes);
-    rpc FetchPathToNode(NetworkPathToNodeFetchReq) returns(stream NetworkLinksFetchRes);
+    rpc FetchLinks(NetworkLinksFetchReq) returns(stream NetworkLinksFetchRes);
+    //rpc FetchLinksFromNode(NetworkLinksFromNodeFetchReq) returns(stream NetworkLinksFetchRes);
+    //rpc FetchPathToNode(NetworkPathToNodeFetchReq) returns(stream NetworkLinksFetchRes);
 }
