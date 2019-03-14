@@ -255,18 +255,18 @@ service QueryService {
     rpc Topology(QueryReq) returns (TopologyQueryRes);
     rpc Instance(QueryReq) returns (InstanceQueryRes);
     
-    rpc GetSubSetMetaData(GetSubSetMetaDataReq) returns (stream GetSubSetMetaDataRes);
-    rpc GetWideColumnNames(GetWideColumnNamesReq) returns (stream GetWideColumnNamesRes);
+    rpc GetSubSetMetaDataEXP(GetSubSetMetaDataReq) returns (stream GetSubSetMetaDataRes);
+    rpc GetWideColumnNamesEXP(GetWideColumnNamesReq) returns (stream GetWideColumnNamesRes);
 
     rpc CountActions(CursorCountReq) returns (CountRes);
     rpc CountTopologies(CursorCountReq) returns (CountRes);
     rpc CountInstances(CursorCountReq) returns (CountRes);
-    rpc CountSubSetInstances(CountSubSetInstancesReq) returns (CountRes);
-    rpc CountWideColumnNames(CursorCountReq) returns (CountRes);
+    rpc CountSubSetInstancesEXP(CountSubSetInstancesReq) returns (CountRes);
+    rpc CountWideColumnNamesEXP(CursorCountReq) returns (CountRes);
 
     rpc FetchActions(ActionFetchReq) returns (stream ActionFetchRes);
     rpc FetchTopologies(TopologyFetchReq) returns (stream TopologyFetchRes);
     rpc FetchInstances(InstanceFetchReq) returns (stream InstanceFetchRes);
-    rpc FetchInstanceSubSet(FetchInstanceSubSetReq) returns (stream InstanceFetchRes);
-    rpc FetchWideColumnTable(WideColumnTableFetchReq) returns (stream WideColumnTableFetchRes);
+    rpc FetchInstanceSubSetEXP(FetchInstanceSubSetReq) returns (stream InstanceFetchRes);
+    rpc FetchWideColumnTableEXP(WideColumnTableFetchReq) returns (stream WideColumnTableFetchRes);
 }
