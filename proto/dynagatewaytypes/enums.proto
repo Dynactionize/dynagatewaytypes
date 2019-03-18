@@ -1,3 +1,4 @@
+// Dynizer enum proto message definitions.
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -6,65 +7,100 @@ option java_generic_services = true;
 
 package dynagatewaytypes;
 
+// Dynizer topology component types.
 enum ComponentType {
+    // No component.
     CT_NONE = 0;
+    // Who component.
     WHO = 1;
+    // What component.
     WHAT = 2;
+    // Where component.
     WHERE = 3;
+    // When component.
     WHEN = 4;
 
     reserved 5 to max;
 }
 
+// Dynizer data type enums.
 enum DataType {
+    // No datatype.
     DT_NONE = 0;
+    // Integer.
     INTEGER = 1;
+    // String (max 4096kB).
     STRING = 2;
+    // Boolean.
     BOOLEAN = 3;
+    // Decimal (datatypes.Decimal).
     DECIMAL = 4;
+    // Timestamp (datatypes.Timestamp).
     TIMESTAMP = 5;
+    // URI (datatypes.Uri).
     URI = 6;
+    // Void (no value).
     VOID = 7;
+    // Float.
     FLOAT = 8;
+    // Unsigned integer.
     UNSIGNED_INTEGER = 9;
+    // Binary.
     BINARY = 10;
+    // UUID string.
     UUID = 11;
+    // Text string (max 1GB).
     TEXT = 12;
     reserved 13 to max;
 }
 
+// Query WHERE object.
 enum WhereObject {
+    // Action ID.
+    // Valid for:
     // - TopologyFilter
     // - InstanceFilter
     WO_ACTION_ID = 0;
 
+    // Action name.
+    // Valid for:
     // - TopologyFilter
     // - InstanceFilter
     WO_ACTION_NAME = 1;
 
+    // Topology ID.
+    // Valid for:
     // - ActionFilter
     // - InstanceFilter
     WO_TOPOLOGY_ID = 2;
 
+    // Topology Sequence.
+    // Valid for:
     // - ActionFilter
     // - InstanceFilter
     WO_TOPOLOGY_SEQUENCE = 3;
 
+    // Topology length.
+    // Valid for:
     // - ActionFilter
     // - InstanceFilter
     WO_TOPOLOGY_LENGTH = 4;
 
+    // Topology component.
+    // Valid for:
     // - ActionFilter
     // - TopologyFilter
     WO_TOPOLOGY_COMPONENT = 5;
 
-
+    // Instance value.
+    // Valid for:
     // - ActionFilter
     // - TopologyFilter
     // - InstanceFilter
     WO_VALUE = 6;
 
-
+    // Instance ID.
+    // Valid for:
     // - ActionFilter
     // - InstanceFilter
     WO_INSTANCE_ID = 7;
@@ -72,47 +108,84 @@ enum WhereObject {
     reserved 8 to max;
 }
 
+// Query WHERE operator.
 enum WhereOperator {
+    // Equal (=).
     EQUAL = 0;
+    // Not equal (!=).
     NOT_EQUAL = 1;
+    // In (IN(...)).
     IN = 2;
+    // Not in (NOT IN(...)).
     NOT_IN = 3;
-    LIKE = 4;           // String matching --> String indx
+    // Like (LIKE).
+    // Used for datatype STRING.
+    LIKE = 4;
+    // Like (NOT LIKE).
+    // Used for datatype STRING.
     NOT_LIKE = 5;
+    // Greater than (>).
+    // Used for datatypes INTEGER, UNSIGNED_INTEGER, FLOAT, DECIMAL, TIMESTAMP.
     GREATER_THAN = 6;
+    // Less than (<).
+    // Used for datatypes INTEGER, UNSIGNED_INTEGER, FLOAT, DECIMAL, TIMESTAMP.
     LESS_THAN = 7;
+    // Greater or equal than (>=).
+    // Used for datatypes INTEGER, UNSIGNED_INTEGER, FLOAT, DECIMAL, TIMESTAMP.
     GREATER_OR_EQUAL_THAN = 8;
+    // Less or equal than (<=).
+    // Used for datatypes INTEGER, UNSIGNED_INTEGER, FLOAT, DECIMAL, TIMESTAMP.
     LESS_OR_EQUAL_THAN = 9;
+    // Between (BETWEEN).
+    // Used for datatypes INTEGER, UNSIGNED_INTEGER, FLOAT, DECIMAL, TIMESTAMP.
     BETWEEN = 10;
-    CONTAINS = 11;      // Full text search --> Text index
+    // Contains (CONTAINS).
+    // Used for datatype TEXT.
+    CONTAINS = 11;
 
     reserved 12 to max;
 }
 
+// Query logical operator.
 enum LogicalOperator {
+    // Logical AND.
     AND = 0;
+    // Logical OR.
     OR = 1;
+    // Logical AND NOT.
     AND_NOT = 2;
+    // Logical OR NOT.
     OR_NOT = 3;
 
     reserved 4 to max;
 }
 
+// Fetch instance subset selector.
 enum InstanceSubSetSelector {
+    // Select by action-topology pair.
     ACTION_TOPOLOGY = 0;
+    // Select by action.
     ACTION = 1;
+    // Select by topology.
     TOPOLOGY = 2;
 
     reserved 3 to max;
 }
 
+// Fetch sort by object
 enum SortObject {
+    // No sort.
     SO_NONE = 0;
+
+    // Sort by action name.
+    // Valid for:
     // - ActionSortField
     // - InstanceSortField
     // - GroupSortField
     SO_ACTION_NAME = 1;
 
+    // Sort by topology length.
+    // Valid for:
     // - TopologySortField
     // - InstanceSortField
     // - GroupSortField
@@ -121,13 +194,21 @@ enum SortObject {
     reserved 3 to max;
 }
 
+// Fetch sort functions
 enum SortFunction {
+    // No sort function
     SF_NONE = 0;
+    // Sort by second
     SF_SECOND = 1;
+    // Sort by minute
     SF_MINUTE = 2;
+    // Sort by hour
     SF_HOUR = 3;
+    // Sort by day
     SF_DAY = 4;
+    // Sort by month
     SF_MONTH = 5;
+    // Sort by year
     SF_YEAR = 6;
 
     reserved 7 to max;

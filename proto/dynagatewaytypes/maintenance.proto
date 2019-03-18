@@ -1,3 +1,4 @@
+// Dynizer maintenance message and service definitions.
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -8,13 +9,20 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
+// Request to get Dynizer version.
 message GetVersionRes{
+    // Version major
     int32 major = 1;
+    // Version minor
     int32 minor = 2;
+    // Version patch
     int32 patch = 3;
 }
 
+// Maintenance service.
 service MaintenanceService {
+    // Drops all data (WARNING: Cannot be reversed).
     rpc DropData(EmptyReq) returns (EmptyRes);
+    // Gets Dynizer version.
     rpc GetVersion(EmptyReq) returns (GetVersionRes);
 }

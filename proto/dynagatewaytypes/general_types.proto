@@ -1,3 +1,4 @@
+// Dynizer general message definitions.
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -9,87 +10,139 @@ import "dynagatewaytypes/datatypes.proto";
 
 package dynagatewaytypes;
 
+// Stream error data (streamed result error).
 message StreamElementError {
+    // gRPC error code.
     int64 code = 1;
+    // Dynizer error code.
     int64 dynizer_code = 2;
+    // Error message.
     string message = 3;
+    // Error UUID.
     string uuid = 4;
 }
 
+// Error metadata (gRPC error metadata).
 message ErrorMeta {
+    // Dynizer error code.
     int64 dynizer_code = 1;
+    // Error UUID.
     string uuid = 2;
 }
 
+// Empty stream result.
 message EmptyStreamRes {
+    // Index in the stream.
     int64 stream_index = 1;
+    // Result error message (not set if no error occured).
     StreamElementError error = 2;
 }
 
+// Fetch window.
 message Window {
+    // Window offset.
     int64 offset = 1;
+    // Window size.
     int64 size = 2;
 }
 
+// Result of a count request.
 message CountRes {
+    // Result count.
     int64 count = 1;
 }
 
+// Show request.
 message ShowReq {
+    // Request window.
     Window window = 2;
 }
 
+// Topology sequence.
 message TopologySequence {
+    // Topology components.
     repeated ComponentType components = 1;
 }
 
+// Dynizer value.
+// Set datatype to indicate value datatype.
+// Set value.*_value according to datatype.
 message Value {
+    // Value datatype
     DataType data_type = 1;
 
     oneof value {
+        // Integer (datatype=INTEGER)
         int64 integer_value = 100;
+        // String (datatype=STRING)
         string string_value = 101;
+        // Boolean (datatype=BOOLEAN)
         bool boolean_value = 102;
+        // Decimal (datatype=DECIMAL)
         Decimal decimal_value = 103;
+        // URI (datatype=URI)
         Uri uri_value = 104;
+        // Float (datatype=FLOAT)
         double float_value = 105;
+        // Unsigned integer (datatype=UNSIGNED_INTEGER)
         uint64 unsigned_integer_value = 106;
+        // Binary (datatype=BINARY)
         bytes binary_value = 107;
+        // Timestamp (datatype=TIMESTAMP)
         Timestamp timestamp_value = 108;
+        // UUID (datatype=UUID)
         string uuid_value = 109;
+        // Text (datatype=TEXT)
         string text_value = 110;
     }
 }
 
+// List of dynizer values
 message ValueList {
+    // Value list
     repeated Value values = 1;
 }
 
+// Action data.
 message Action {
+    // Action ID.
     string id = 1;
+    // Action name.
     string name = 2;
 }
 
+// Topology data.
 message Topology {
+    // Topology ID.
     string id = 1;
+    // Topology sequence.
     TopologySequence sequence = 2;
 }
 
+// Label data.
 message LabelPosition {
+    // Label display string.
     string label = 1;
+    // Label position.
     int32 position = 2;
 }
 
+// Empty request.
 message EmptyReq {
 }
 
+// Empty result.
 message EmptyRes {
 }
 
+// List of positions.
 message PositionList {
+    // Position list.
     repeated int32 positions = 1;
 }
 
+// List of labels.
 message LabelList {
+    // Label list.
     repeated string labels = 2;
 }

@@ -9,3 +9,4 @@ python/
 ruby/
 .DS_Store
 /errors.go
+docs

@@ -1,3 +1,4 @@
+// Dynizer label proto message and service definitions.
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -8,80 +9,144 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
+// Request to create labels of an action-topology pair.
+// Set action.action_id to refer action by ID.
+// Set action.name to refer action by name.
+// Set topology.topology_id to refer topology by ID.
+// Set topology.sequence to refer topology by sequence.
 message CreateLabelsReq {
     oneof action {
+        // Action ID.
         string action_id = 2;
+        // Action name.
         string name = 3;
     }
     oneof topology {
+        // Topology ID.
         string topology_id = 4;
+        // Topology sequence.
         TopologySequence sequence = 5;
     }
+    // Label values.
     repeated LabelPosition labels = 6;
 }
 
+// Request to get labels of an action-topology pair.
+// Set action.action_id to refer action by ID.
+// Set action.name to refer action by name.
+// Set topology.topology_id to refer topology by ID.
+// Set topology.sequence to refer topology by sequence.
 message GetLabelsReq {
     oneof action {
+        // Action ID.
         string action_id = 2;
+        // Action name.
         string name = 3;
     }
     oneof topology {
+        // Topology ID.
         string topology_id = 4;
+        // Topology sequence.
         TopologySequence sequence = 5;
     }
 }
 
+// Request to rename a label of an action-topology pair.
+// Set action.action_id to refer action by ID.
+// Set action.name to refer action by name.
+// Set topology.topology_id to refer topology by ID.
+// Set topology.sequence to refer topology by sequence.
 message RenameLabelReq {
     oneof action {
+        // Action ID.
         string action_id = 2;
+        // Action name.
         string name = 3;
     }
     oneof topology {
+        // Topology ID.
         string topology_id = 4;
+        // Topology sequence.
         TopologySequence sequence = 5;
     }
+    // Label value.
     LabelPosition label = 6;
 }
 
+// Request to delete a label of an action-topology pair.
+// Set action.action_id to refer action by ID.
+// Set action.name to refer action by name.
+// Set topology.topology_id to refer topology by ID.
+// Set topology.sequence to refer topology by sequence.
 message DeleteLabelReq {
     oneof action {
+        // Action ID.
         string action_id = 2;
+        // Action name.
         string name = 3;
     }
     oneof topology {
+        // Topology ID.
         string topology_id = 4;
+        // Topology sequence.
         TopologySequence sequence = 5;
     }
+    // Label position.
     int32 position = 6;
 }
 
+// Request to delete all labels of an action-topology pair.
+// Set action.action_id to refer action by ID.
+// Set action.name to refer action by name.
+// Set topology.topology_id to refer topology by ID.
+// Set topology.sequence to refer topology by sequence.
 message DeleteAllLabelsReq {
     oneof action {
+        // Action ID.
         string action_id = 2;
+        // Action name.
         string name = 3;
     }
     oneof topology {
+        // Topology ID.
         string topology_id = 4;
+        // Topology sequence.
         TopologySequence sequence = 5;
     }
 }
 
+// Item of a get labels result.
 message GetLabelsResItem {
+    // Label value.
     repeated LabelPosition labels = 1;
 }
 
+// Result of a get labels request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message GetLabelsRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         GetLabelsResItem item = 3;
     }
 }
 
+// Label service.
+// Stream results are sent asynchronous.
+// Result messages contain a field stream_index which can be used to match the result with the request.
 service LabelService {
+    // Creates labels.
     rpc Create(stream CreateLabelsReq) returns(stream EmptyStreamRes);
+    // Gets labels.
     rpc Get(stream GetLabelsReq) returns(stream GetLabelsRes);
+    // Renames labels.
     rpc Rename(stream RenameLabelReq) returns(stream EmptyStreamRes);
+    // Deletes labels.
     rpc Delete(stream DeleteLabelReq) returns(stream EmptyStreamRes);
+    // Deletes all labels.
     rpc DeleteAll(stream DeleteAllLabelsReq) returns(stream EmptyStreamRes);
 }

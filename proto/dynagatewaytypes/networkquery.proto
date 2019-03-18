@@ -1,3 +1,5 @@
+// Dynizer network query proto message and service definitions.
+// This feature is experimental!
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -31,7 +33,7 @@ message SetNetworkActionOverlaySettingsReq {
     oneof action {
         string id = 2;
         string name = 3;
-    } 
+    }
     oneof element_selector {
         PositionList exclude_positions = 4;
         PositionList include_positions = 5;

@@ -1,3 +1,4 @@
+// Dynizer authentication proto message and service definitions.
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -6,65 +7,104 @@ option java_generic_services = true;
 
 package dynagatewaytypes;
 
+// User authentication data.
 message UserAuth {
+    // User name.
     string user_name = 1;
+    // User password.
     string password = 2;
 }
 
+// Bearer token authentication data.
 message BearerToken {
+    // Bearer token.
     string token = 1;
 }
 
+// Service authentication data.
 message ServiceAuth {
+    // Client ID.
     string client_id = 1;
+    // Client secret.
     string secret = 2;
 }
 
+// Session data.
 message Session {
+    // Session valid.
     bool valid = 1;
+    // Session user name.
     string user_name = 2;
+    // Session validity time.
     int32 expires_in = 3;
 }
 
+// Request to get a token.
+// Set creds.user for user authentication.
+// Set creds.bearer for bearer authentication.
+// Set creds.service for service authentication.
 message GetTokenReq {
     oneof creds {
+        // User authentication data.
         UserAuth user = 1;
+        // Bearer authentication data.
         BearerToken bearer = 2;
+        // Service authentication data.
         ServiceAuth service = 3;
     };
 }
 
+// Request to refresh a token.
 message RefreshTokenReq{
+    // Bearer token.
     string token = 1;
 }
 
+// Result of a get token request.
 message GetTokenRes {
-    string token = 1;
+   // Bearer token.
+   string token = 1;
 }
 
+// Request a login URI.
 message LoginURIReq {
+    // User name.
     string user_name = 1;
 }
 
+// Result of a get login URI request.
 message LoginURIRes {
+    // Login URI.
     string uri = 1;
 }
 
+// Request to get session info.
 message GetSessionInfoReq {
+    // Session ID.
     string session_id = 1;
 }
 
+// Result of a get session info request.
 message GetSessionInfoRes{
+    // Session data.
     Session session = 1;
 }
 
+// Result of a refresh token request.
 message RefreshTokenRes {
+    // Bearer token.
     string token = 1;
 }
 
+// Authentication service.
+// Service calls to login to the dynizer and retrieve tokens to access dynizer data.
 service AuthenticateService {
+    // Gets a login URI.
     rpc LoginURI(LoginURIReq) returns(LoginURIRes);
+    // Gets a token through user/bearer/service authentication.
     rpc GetToken(GetTokenReq) returns(GetTokenRes);
+    // Gets session info.
     rpc GetSessionInfo(GetSessionInfoReq) returns(GetSessionInfoRes);
+    // Refreshes a token.
     rpc RefreshToken(RefreshTokenReq) returns(RefreshTokenRes);
 }

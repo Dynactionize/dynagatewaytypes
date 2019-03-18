@@ -59,7 +59,7 @@ clean_go:
 	-rm -f $(GO_PREFIX)/go.dynactionize.com/dynagatewaytypes/errors.go
 
 ${GOPATH}/bin/protoc-gen-go:
-	go get -u github.com/golang/protobuf/protoc-gen-go	
+	go get -u github.com/golang/protobuf/protoc-gen-go
 
 # Java generation
 java:
@@ -76,7 +76,7 @@ clean_java:
 # C++ generation
 cpp: deps/grpc/bins/opt/grpc_cpp_plugin
 	-mkdir -p $(CPP_PREFIX)
-	
+
 	protoc --proto_path=$(WD)/proto \
 		   --cpp_out=$(CPP_PREFIX) \
 		   --grpc_cpp_out=$(CPP_PREFIX) \
@@ -149,3 +149,15 @@ deps/grpc/Makefile:
 	-mkdir -p deps
 	cd deps && git clone --recursive https://github.com/grpc/grpc
 
+# Documentation generation
+docs: ${GOPATH}/bin/protoc-gen-go ${GOPATH}/bin/protoc-gen-doc
+	-rm -rf docs
+	-mkdir -p docs
+	protoc --proto_path=$(WD)/proto \
+		   --doc_out=$(WD)/docs \
+		   $(WD)/proto/dynagatewaytypes/*.proto
+
+${GOPATH}/bin/protoc-gen-doc:
+	go get -u github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc
+
+.PHONY: docs

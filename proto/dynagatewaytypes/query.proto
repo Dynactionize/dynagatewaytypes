@@ -1,3 +1,4 @@
+// Dynizer query proto message and service definitions.
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -12,261 +13,442 @@ import "dynagatewaytypes/instance.proto";
 
 package dynagatewaytypes;
 
-
+// Request to count results of a cursor.
 message CursorCountReq {
+    // Query cursor.
     string cursor = 2;
 }
 
+// Request to query.
+// Set root.branch to branch the query.
+// Set root.leaf to set the query as leaf.
 message QueryReq {
     oneof root {
+        // Query branch node.
         WhereClauseBranchNode branch = 2;
+        // Query leaf node.
         WhereClauseLeafNode leaf = 3;
     }
 }
 
+// WHERE clause branch node.
+// Defines a query branch operation and child branch/leaves.
 message WhereClauseBranchNode {
+    // Branch logical operator.
     LogicalOperator logical_operator = 1;
+    // Branch children
     repeated WhereClauseChildNode children = 2;
 }
 
+// WHERE clause child node.
+// Defines a WHERE clause branch node's children.
+// Set child.branch to branch the child.
+// Set child.leaf to set the child as leaf.
 message WhereClauseChildNode{
     oneof child {
+        // Child branch node.
         WhereClauseBranchNode branch = 2;
+        // Child leaf node.
         WhereClauseLeafNode leaf = 3;
     }
 }
 
+// WHERE clause leaf node.
+// Defines a query leaf object, operator and value(s).
+// Set value.single for a single value.
+// Set value.list for a list of values.
+// Single value operators: EQUAL, NOT_EQUAL, LIKE, NOT_LIKE, GREATER_THAN, LESS_THAN,
+// GREATER_THAN_OR_EQUAL, LESS_THAN_OR_EQUAL, CONTAINS.
+// List value operators: IN, NOT_IN, BETWEEN (needs exactly 2 values).
 message WhereClauseLeafNode {
+    // WHERE object.
     WhereObject object = 1;
+    // WHERE operator.
     WhereOperator operator = 2;
     oneof value {
+        // Leaf single value.
         Value single = 3;
+        // Leaf value list.
         ValueList list = 4;
     }
 
+    // Component of the value (valid only with WhereObject WO_VALUE).
     ComponentType component = 5;
+    // Position of the value (valid only with WhereObject WO_VALUE).
     int32 position = 10;
+    // Label of the value (valid only with WhereObject WO_VALUE).
     string label = 11;
 }
 
-message ComponentFilter {
-    ComponentType type = 1;
-    int32 position = 2;
-    string label = 3;
-}
-
+// Result of a query actions request.
+// Cursor can be used to fetch results.
 message ActionQueryRes {
+    // Result cursor.
     string cursor = 1;
+    // Result count.
     int64 count = 2;
 }
 
+// Result of a query topologies request.
+// Cursor can be used to fetch results.
 message TopologyQueryRes {
+    // Result cursor.
     string cursor = 1;
+    // Result count.
     int64 count = 2;
 }
 
+// Result of a query instances request.
+// Cursor can be used to fetch results.
 message InstanceQueryRes {
+    // Result cursor.
     string cursor = 1;
+    // Result count.
     int64 count = 2;
+    // Result action-topology pair count.
     int64 number_action_topologies = 3;
+    // Result action count.
     int64 number_actions = 4;
+    // Result topology count.
     int64 number_topologies = 5;
 }
 
-message WideColumnQueryRes {
-    string cursor = 1;
-    int64 count = 2;
-    repeated string column_names = 3;
-}
-
+// Request to fetch actions of a result cursor.
 message ActionFetchReq {
+    // Result cursor.
     string cursor = 2;
+    // Action sort parameters.
     repeated ActionSortField sorting = 3;
+    // Fetch window.
     Window window = 4;
 }
 
+// Request to fetch topologies of a result cursor.
 message TopologyFetchReq {
+    // Result cursor.
     string cursor = 2;
+    // Topology sort parameters.
     repeated TopologySortField sorting = 3;
+    // Fetch window.
     Window window = 4;
 }
 
+// Request to fetch instances of a result cursor.
 message InstanceFetchReq {
+    // Result cursor.
     string cursor = 2;
+    // Instance sort parameters.
     repeated InstanceSortField sorting = 3;
+    // Fetch window.
     Window window = 4;
+    // Return result action ID.
     bool return_action_id = 5;
+    // Return result topology ID.
     bool return_topology_id = 6;
 }
 
+// Request to fetch instance subset metadata.
 message GetSubSetMetaDataReq {
+    // Result cursor.
     string cursor = 2;
+    // Selector for action/topology/action-topology pair metadata.
     InstanceSubSetSelector selector = 3;
+    // Return result labels.
     bool return_labels = 4;
 }
 
+// Request to get the column names of a wide column table.
 message GetWideColumnNamesReq {
+    // Result cursor.
     string cursor = 2;
 }
 
+// Request to count instances in a specific subset.
+// Set sub_set_meta_data.action_meta_data to count instances of an action.
+// Set sub_set_meta_data.topology_meta_data to count instances of a topology.
+// Set sub_set_meta_data.action_topology_pair_meta_data to count instances of an action-topology pair.
 message CountSubSetInstancesReq {
+    // Result cursor.
     string cursor = 2;
     oneof sub_set_meta_data {
+        // Action meta data.
         ActionSubSetMetaData action_meta_data = 3;
+        // Topology meta data.
         TopologySubSetMetaData topology_meta_data = 4;
+        // Action-topology pair meta data.
         ActionTopologyPairSubSetMetaData action_topology_pair_meta_data = 5;
     }
 }
 
+// Request to fetch instances in a specific subset.
+// Set sub_set_meta_data.action_meta_data to fetch instances of an action.
+// Set sub_set_meta_data.topology_meta_data to fetch instances of a topology.
+// Set sub_set_meta_data.action_topology_pair_meta_data to fetch instances of an action-topology pair.
 message FetchInstanceSubSetReq {
+    // Result cursor.
     string cursor = 2;
+    // Instance sort parameters.
     repeated InstanceSortField sorting = 3;
     oneof sub_set_meta_data {
+        // Action meta data.
         ActionSubSetMetaData action_meta_data = 4;
+        // Topology meta data.
         TopologySubSetMetaData topology_meta_data = 5;
+        // Action-topology pair meta data.
         ActionTopologyPairSubSetMetaData action_topology_pair_meta_data = 6;
     }
+    // Fetch window.
     Window window = 7;
 }
 
+// Request to fetch instances in a wide column table.
 message WideColumnTableFetchReq {
+    // Result cursor.
     string cursor = 2;
+    // Fetch window.
     Window window = 3;
-    bool include_action_id = 4;
-    bool include_topology_id = 5;
-    bool include_row_number = 6;
+    // Return result action ID.
+    bool return_action_id = 4;
+    // Return result topology ID.
+    bool return_topology_id = 5;
+    // Return result row number.
+    bool return_row_number = 6;
+    // Instance sort parameters.
     repeated InstanceSortField sorting = 7;
 }
 
+// Action sort parameter.
 message ActionSortField {
+    // Sort object.
     SortObject field = 1;
+    // Sort descending.
     bool descending = 2;
 }
 
+// Topology sort parameter.
 message TopologySortField {
+    // Sort object.
     SortObject field = 1;
+    // Sort descending.
     bool descending = 2;
 }
 
+// Datatype sort funciton parameter.
 message DataTypeSortFunctions {
+    // Datatype to apply function to.
     DataType data_type = 1;
+    // Sort function to use.
     repeated SortFunction sort_function = 2;
 }
 
+// Instance sort parameter.
+// Set field.object to sort on SortObject.
+// Set field.topology_position to sort on a specific position.
+// Set field.label to sort on a specific label.
 message InstanceSortField {
     oneof field {
+        // Sort object.
         SortObject object = 1;
+        // Topology position.
         int32 topology_position = 2;
+        // Label.
         string label = 3;
     }
+    // Sort descending.
     bool descending = 4;
+    // List of datatype sort functions.
     repeated DataTypeSortFunctions sort_functions = 5;
 }
 
+// Item of a wide column table result.
 message WideColumnItem {
+    // Instance ID.
     string instance_id = 1;
-    repeated ValueList cells = 2; 
+    // List of list of values.
+    // List per column of values matched by label.
+    repeated ValueList cells = 2;
+    // Instance action ID.
     string action_id = 3;
+    // Instance topology ID.
     string topology_id = 4;
 }
 
+// Result of a fetch action request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message ActionFetchRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         ActionResItem item = 3;
     }
 }
 
+// Result of a fetch topology request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message TopologyFetchRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         TopologyResItem item = 3;
     }
 }
 
+// Result of a fetch instance request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message InstanceFetchRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         InstanceResItem item = 3;
     }
 }
 
+// Action subset metadata.
+// Used to fetch subsets of instances for specific actions.
 message ActionSubSetMetaData {
+    // List of actions.
     repeated Action actions = 1;
 }
 
+// Topology subset metadata.
+// Used to fetch subsets of instances for specific topologies.
 message TopologySubSetMetaData {
+    // List of topologies.
     repeated Topology topologies = 1;
 }
 
+// Action-topology pair.
 message ActionTopologyPair {
+    // Pair action.
     Action action = 1;
+    // Pair topology.
     Topology topology = 2;
+    // Pair labels.
     repeated string labels = 3;
 }
 
+// Action-topology pair subset metadata.
+// Used to fetch subsets of instances for specific action-topology pairs.
 message ActionTopologyPairSubSetMetaData {
+    // List of action-topology pairs.
     repeated ActionTopologyPair action_topology_pairs = 1;
 }
 
+// Result of a get subset metadata request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message GetSubSetMetaDataRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         GetSubSetMetaDataResItem item = 3;
     }
 }
 
+// Item of a get subset metadata result.
+// Returns sub_set_meta_data.action_meta_data for action requests.
+// Returns sub_set_meta_data.topology_meta_data for topology requests.
+// Returns sub_set_meta_data.action_topology_pair_meta_data for action-topology pair requests.
 message GetSubSetMetaDataResItem {
+    // Result count.
     int64 count = 1;
-    oneof meta_data {
+    oneof sub_set_meta_data {
+        // Action meta data.
         ActionSubSetMetaData action_meta_data = 2;
+        // Topology meta data.
         TopologySubSetMetaData topology_meta_data = 3;
+        // Action-topology pair meta data.
         ActionTopologyPairSubSetMetaData action_topology_pair_meta_data = 4;
     }
 }
 
+// Result of a get wide column names request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message GetWideColumnNamesRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         GetWideColumnNamesResItem item = 3;
     }
 }
 
+// Item of a get wide column name result.
 message GetWideColumnNamesResItem {
+    // Column name.
     string column_name = 1;
+    // Column position.
     int64 column_position = 2;
 }
 
+// Result of a fetch wide column request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message WideColumnTableFetchRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         WideColumnItem item = 3;
     }
 }
 
+// Query service.
+// Stream results are sent asynchronous.
+// Result messages contain a field stream_index which can be used to match the result with the request.
+// Query requests return a cursor UUID, which can be used to fetch results in a specific format.
 service QueryService {
+    // Queries actions.
     rpc Action(QueryReq) returns (ActionQueryRes);
+    // Queries topologies.
     rpc Topology(QueryReq) returns (TopologyQueryRes);
+    // Queries instances.
     rpc Instance(QueryReq) returns (InstanceQueryRes);
-    
+
+    // Gets cursor subset metadata (Experimental).
     rpc GetSubSetMetaDataEXP(GetSubSetMetaDataReq) returns (stream GetSubSetMetaDataRes);
+    // Gets cursor wide coluln names (Experimental).
     rpc GetWideColumnNamesEXP(GetWideColumnNamesReq) returns (stream GetWideColumnNamesRes);
 
+    // Counts cursor actions.
     rpc CountActions(CursorCountReq) returns (CountRes);
+    // Counts cursor topologies.
     rpc CountTopologies(CursorCountReq) returns (CountRes);
+    // Counts cursor instances.
     rpc CountInstances(CursorCountReq) returns (CountRes);
+    // Counts cursor instances in specific subset (Experimental).
     rpc CountSubSetInstancesEXP(CountSubSetInstancesReq) returns (CountRes);
+    // Counts cursor wide column names (Experimental).
     rpc CountWideColumnNamesEXP(CursorCountReq) returns (CountRes);
 
+    // Fetches actions.
     rpc FetchActions(ActionFetchReq) returns (stream ActionFetchRes);
+    // Fetches topologies.
     rpc FetchTopologies(TopologyFetchReq) returns (stream TopologyFetchRes);
+    // Fetches instances.
     rpc FetchInstances(InstanceFetchReq) returns (stream InstanceFetchRes);
+    // Fetches instances in a specific subset (Experimental).
     rpc FetchInstanceSubSetEXP(FetchInstanceSubSetReq) returns (stream InstanceFetchRes);
+    // Fetches instances in a wide column representation (Experimental).
     rpc FetchWideColumnTableEXP(WideColumnTableFetchReq) returns (stream WideColumnTableFetchRes);
 }

@@ -1,3 +1,4 @@
+// Dynizer instance proto message and service definitions.
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -8,64 +9,112 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
+// Request to create an instance.
+// Set action.action_id to refer action by ID.
+// Set action.name to refer action by name.
+// Set topology.topology_id to refer topology by ID.
+// Set topology.sequence to refer topology by sequence.
 message CreateInstanceReq {
     oneof action {
+        // Action ID.
         string action_id = 2;
+        // Action name.
         string name = 3;
     }
     oneof topology {
+        // Topology ID.
         string topology_id = 4;
+        // Topology sequence.
         TopologySequence sequence = 5;
     }
+    // Instance values.
+    // Length of value list must be equal to topology length.
     ValueList values = 6;
 }
 
+// Request to get an instance.
 message GetInstanceReq {
+    // Instance ID.
     string id = 2;
+    // Return instance action ID.
     bool return_action_id = 3;
+    // Return instance topology ID.
     bool return_topology_id = 4;
 }
 
+// Request to update an instance.
 message UpdateInstanceReq {
+    // Instance ID.
     string id = 2;
+    // Instance values.
+    // Length of value list must be equal to topology length.
     ValueList values = 3;
 }
 
+// Request to delete an instance.
 message DeleteInstanceReq {
+    // Instance ID.
     string id = 2;
 }
 
+// Item of an instance result.
 message InstanceResItem {
+    // Instance ID.
     string id = 1;
+    // Instance values.
     ValueList values = 2;
+    // Instance action ID.
     string action_id = 3;
+    // Instance topology ID.
     string topology_id = 4;
 }
 
+// Result of a get instance request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message GetInstanceRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         InstanceResItem item = 3;
     }
 }
 
+// Item of a create instance result.
 message CreateInstanceResItem {
+    // Instance ID.
     string id = 1;
 }
 
+// Result of a create instance request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message CreateInstanceRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         CreateInstanceResItem item = 3;
     }
 }
 
+// Instance service.
+// Stream results are sent asynchronous.
+// Result messages contain a field stream_index which can be used to match the result with the request.
 service InstanceService {
+    // Creates instances.
     rpc Create(stream CreateInstanceReq) returns(stream CreateInstanceRes);
+    // Counts all instances.
     rpc Count(EmptyReq) returns(CountRes);
+    // Gets instances.
     rpc Get(stream GetInstanceReq) returns(stream GetInstanceRes);
+    // Updates instances.
     rpc Update(stream UpdateInstanceReq) returns(stream EmptyStreamRes);
+    // Deletes instances.
     rpc Delete(stream DeleteInstanceReq) returns(stream EmptyStreamRes);
 }

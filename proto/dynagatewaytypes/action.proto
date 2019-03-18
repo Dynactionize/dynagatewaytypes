@@ -1,3 +1,4 @@
+// Dynizer action proto message and service definitions.
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -8,60 +9,103 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
+// Request to create an action.
 message CreateActionReq {
+    // Action name.
     string name = 2;
 }
 
+// Request to get an action.
+// Set selector.id to get by ID.
+// Set selector.name to get by name.
 message GetActionReq {
     oneof selector {
+        // Action ID.
         string id = 2;
+        // Action name.
         string name = 3;
     };
 }
 
+// Request to rename an action by ID.
 message RenameActionReq {
+    // Action ID.
     string id = 2;
+    // New action name.
     string name = 3;
 }
 
+// Request to delete an action.
+// Set selector.id to get by ID.
+// Set selector.name to get by name.
 message DeleteActionReq {
     oneof selector {
+        // Action ID.
         string id = 2;
+        // Action name.
         string name = 3;
     }
+    // Cascade option.
+    // Remove all associated topologies/labels/instances.
     bool cascade = 4;
 }
 
+// Result of a create action request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message CreateActionRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         CreateActionResItem item = 3;
     }
 }
 
+// Item of a create action result.
 message CreateActionResItem {
+    // Action ID.
     string id = 1;
 }
 
+// Result of a get action request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message GetActionRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         ActionResItem item = 3;
     }
 }
 
+// Item of an action result.
 message ActionResItem {
+    // Action ID.
     string id = 1;
+    // Action name.
     string name = 2;
 }
 
+// Action service.
+// Stream results are sent asynchronous.
+// Result messages contain a field stream_index which can be used to match the result with the request.
 service ActionService {
+    // Creates Actions.
     rpc Create(stream CreateActionReq) returns(stream CreateActionRes);
+    // Gets actions.
     rpc Get(stream GetActionReq) returns(stream GetActionRes);
+    // Counts all actions.
     rpc Count(EmptyReq) returns(CountRes);
+    // Shows all actions.
     rpc Show(ShowReq) returns(stream GetActionRes);
+    // Renames actions.
     rpc Rename(stream RenameActionReq) returns(stream EmptyStreamRes);
+    // Deletes actions.
     rpc Delete(stream DeleteActionReq) returns(stream EmptyStreamRes);
 }

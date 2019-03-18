@@ -1,3 +1,4 @@
+// Dynizer datatype proto message definitions.
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -6,24 +7,40 @@ option java_generic_services = true;
 
 package dynagatewaytypes;
 
+// Decimal data value.
 message Decimal {
+    // Decimal coefficient.
     int64 coefficient = 1;
+    // Decimal exponent.
     int32 exponent = 2;
 }
 
+// URI data value.
 message Uri {
+    // URI schema.
     string schema = 1;
+    // URI user name.
     string user_name = 2;
+    // URI user password.
     string user_password = 3;
+    // URI host.
     string host = 4;
+    // URI port.
     int64 port = 5;
+    // URI path.
     string path = 6;
+    // URI query.
     string query = 7;
+    // URI fragment.
     string fragment = 8;
 }
 
+// Timestamp data value.
 message Timestamp {
+    // Unix seconds
     int64 unix_seconds = 1;
+    // Timezone
     string timezone = 2;
+    // Timezone offset
     int32 offset = 3;
 }

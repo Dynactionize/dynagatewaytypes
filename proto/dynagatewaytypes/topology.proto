@@ -1,3 +1,4 @@
+// Dynizer topology proto message and service definitions.
 syntax = "proto3";
 
 option go_package = "go.dynactionize.com/dynagatewaytypes";
@@ -8,10 +9,15 @@ import "dynagatewaytypes/general_types.proto";
 
 package dynagatewaytypes;
 
+// Request to create a topology.
 message CreateTopologyReq {
+    // Topology sequence.
     TopologySequence sequence = 2;
 }
 
+// Request to get a topology.
+// Set selector.id to get by ID.
+// Set selector.sequence to get by sequence.
 message GetTopologyReq {
     oneof selector {
         string id = 2;
@@ -19,32 +25,54 @@ message GetTopologyReq {
     }
 }
 
+// Item of a create topology result.
 message CreateTopologyResItem {
+    // Topology ID.
     string id = 1;
 }
 
+// Result of a create topology request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message CreateTopologyRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         CreateTopologyResItem item = 3;
     }
 }
 
+// Item of a topology result.
 message TopologyResItem {
+    // Topology ID.
     string id = 1;
+    // Topology sequence.
     TopologySequence sequence = 2;
 }
 
+// Result of a get topology request.
+// Returns response.error on request errors.
+// Returns response.item on request success.
 message GetTopologyRes {
+    // Index in the stream.
     int64 stream_index = 1;
     oneof response {
+        // Result error message.
         StreamElementError error = 2;
+        // Result item.
         TopologyResItem item = 3;
     }
 }
 
+// Topology service.
+// Stream results are sent asynchronous.
+// Result messages contain a field stream_index which can be used to match the result with the request.
 service TopologyService {
+    // Creates topologies.
     rpc Create(stream CreateTopologyReq) returns(stream CreateTopologyRes);
+    // Gets topologies.
     rpc Get(stream GetTopologyReq) returns(stream GetTopologyRes);
 }
