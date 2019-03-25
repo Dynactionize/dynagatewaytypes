@@ -53,6 +53,15 @@ message WhereClauseChildNode{
     }
 }
 
+message TopologySequenceSelector {
+    oneof value {
+        // Leaf single topology sequence.
+        TopologySequence single = 1;
+        // Leaf topology sequence list.
+        TopologySequenceList list = 2;
+    }
+}
+
 // WHERE clause leaf node.
 // Defines a query leaf object, operator and value(s).
 // Set value.single for a single value.
@@ -70,6 +79,8 @@ message WhereClauseLeafNode {
         Value single = 3;
         // Leaf value list.
         ValueList list = 4;
+        // Leaf topology sequence.
+        TopologySequenceSelector topology_sequence = 6;
     }
 
     // Component of the value (valid only with WhereObject WO_VALUE).

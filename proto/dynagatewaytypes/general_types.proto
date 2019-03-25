@@ -64,6 +64,12 @@ message TopologySequence {
     repeated ComponentType components = 1;
 }
 
+// List of topology sequences
+message TopologySequenceList {
+    // Topology sequence list
+    repeated TopologySequence topology_sequences = 1;
+}
+
 // Dynizer value.
 // Set datatype to indicate value datatype.
 // Set value.*_value according to datatype.
