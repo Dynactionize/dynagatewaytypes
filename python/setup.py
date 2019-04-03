@@ -140,7 +140,7 @@ class DynaBuildPy(_build_py):
 setup(
     distclass=DynaDistribution,
     name="dynagatewaytypes-dynactionize.com",
-    version="1.0.1",
+    version="__dynizer_version__",
     author="Dynactionize NV",
     author_email="info-belgium@dynationize.com",
     description="Python gRPC types for the Dynizer",
