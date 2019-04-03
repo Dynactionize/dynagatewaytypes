@@ -139,7 +139,7 @@ class DynaBuildPy(_build_py):
 
 setup(
     distclass=DynaDistribution,
-    name="dynagatewaytypes-dynactionize.com",
+    name="dynagatewaytypes",
     version="__dynizer_version__",
     author="Dynactionize NV",
     author_email="info-belgium@dynationize.com",
