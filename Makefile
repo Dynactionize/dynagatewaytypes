@@ -152,9 +152,9 @@ deps/grpc/Makefile:
 # Documentation generation
 docs: ${GOPATH}/bin/protoc-gen-go ${GOPATH}/bin/protoc-gen-doc
 	-rm -rf docs
-	-mkdir -p docs
+	-mkdir -p docs/dynagatewaytypes
 	protoc --proto_path=$(WD)/proto \
-		   --doc_out=$(WD)/docs \
+		   --doc_out=$(WD)/docs/dynagatewaytypes \
 		   $(WD)/proto/dynagatewaytypes/*.proto
 
 ${GOPATH}/bin/protoc-gen-doc:

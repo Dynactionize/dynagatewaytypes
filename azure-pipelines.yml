@@ -37,3 +37,17 @@ steps:
     git commit -m "$(Build.BuildNumber)"
     git -c http.$REPO_URL.extraHeader="Authorization: Basic $(PAT_ENC)" push
   displayName: 'protobuf to go and push'
+
+- template: make-docs.yaml@templates
+
+- task: ArchiveFiles@2
+  displayName: 'zip docs folder'
+  inputs:
+    rootFolderOrFile: $(system.defaultWorkingDirectory)/docs
+    includeRootFolder: true
+    verbose: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifact'
+  inputs:
+    ArtifactName: dynagatewaytypes-docs
