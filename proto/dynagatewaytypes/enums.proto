@@ -68,6 +68,12 @@ enum WhereObject {
     // - InstanceFilter
     WO_ACTION_NAME = 1;
 
+    // Action cursor.
+    // Valid for:
+    // - TopologyFilter
+    // - InstanceFilter
+    WO_ACTION_CURSOR = 8;
+
     // Topology ID.
     // Valid for:
     // - ActionFilter
@@ -79,6 +85,12 @@ enum WhereObject {
     // - ActionFilter
     // - InstanceFilter
     WO_TOPOLOGY_SEQUENCE = 3;
+
+    // Topology cursor.
+    // Valid for:
+    // - ActionFilter
+    // - InstanceFilter
+    WO_TOPOLOGY_CURSOR = 9;
 
     // Topology length.
     // Valid for:
@@ -102,10 +114,18 @@ enum WhereObject {
     // Instance ID.
     // Valid for:
     // - ActionFilter
+    // - TopologyFilter
     // - InstanceFilter
     WO_INSTANCE_ID = 7;
 
-    reserved 8 to max;
+    // Instance cursor.
+    // Valid for:
+    // - ActionFilter
+    // - TopologyFilter
+    // - InstanceFilter
+    WO_INSTANCE_CURSOR = 10;
+
+    reserved 11 to max;
 }
 
 // Query WHERE operator.
