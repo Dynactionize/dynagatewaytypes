@@ -5,6 +5,8 @@ option go_package = "go.dynactionize.com/dynagatewaytypes";
 option java_package = "com.dynactionize.dynagatewaytypes";
 option java_generic_services = true;
 
+import "dynagatewaytypes/general_types.proto";
+
 package dynagatewaytypes;
 
 // User authentication data.
@@ -96,6 +98,11 @@ message RefreshTokenRes {
     string token = 1;
 }
 
+// Result with the username from the auth Token
+message UserNameRes {
+    string user_name = 1;
+}
+
 // Authentication service.
 // Service calls to login to the dynizer and retrieve tokens to access dynizer data.
 service AuthenticateService {
@@ -107,4 +114,6 @@ service AuthenticateService {
     rpc GetSessionInfo(GetSessionInfoReq) returns(GetSessionInfoRes);
     // Refreshes a token.
     rpc RefreshToken(RefreshTokenReq) returns(RefreshTokenRes);
+     // GetUser returns the username
+     rpc GetUser(EmptyReq) returns(UserNameRes);
 }
